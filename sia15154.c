@@ -14,11 +14,14 @@ plagiarized the work of other students and/or persons.
 
 // Function Declarations
 int rollDice();
+int movePlayerPosition(int initialPlayerPosition, int rollDice);
 
 int main()
 {
   int start;
   int gameDifficulty, playerPosition ;
+
+  playerPosition = 1;
 
 
   // start screen
@@ -36,8 +39,8 @@ int main()
 
 
   printf("________________________________________________________________________________________\n\n");
-	printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
-	printf("________________________________________________________________________________________\n\n");
+  printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
+  printf("________________________________________________________________________________________\n\n");
   
   // Difficulty Selection:
   printf("Choose Your Difficulty [(1) (2) (3)]: ");
@@ -71,7 +74,11 @@ int main()
 	printf("	*                          *\n");
 
   // dice rolling works
-  printf("dice: %i\n", rollDice());
+  
+  printf("Initial Player Position: %d", playerPosition);
+  playerPosition = movePlayerPosition(playerPosition, rollDice());
+  printf("New Player Position: %d", playerPosition);
+
   
 }
 
@@ -90,4 +97,10 @@ int rollDice(){
   return num;
 }
 
+int movePlayerPosition(int initialPlayerPosition, int rollDice)
+{
+  int newPosition;
+  newPosition = initialPlayerPosition + rollDice;
+  return newPosition;
+}
 
