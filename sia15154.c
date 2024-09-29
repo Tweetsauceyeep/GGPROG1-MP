@@ -7,18 +7,18 @@ further certify that I have not copied in part or whole or otherwise
 plagiarized the work of other students and/or persons.
 <Sia, Ethan James D.> - <12415154> - <S11>
 ******************************************************************************/
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h> 
+#include <stdlib.h> 
 #include <math.h>
 #include <time.h>
-#include <stdbool.h>
-/*
-<Description of the Function>
-Precondition: <precondition / assumption>
-@param <name> <purpose>
-@return <Randomized Number between 1 and 6, to simulate the rolling of a dice>
-*/
 
+
+/*
+<Generates a random number between a specified range (1, 6) then returning that number to be used in main>
+Precondition: <No Preconditions/Assumptions.>
+@param <name> <purpose>
+@return <Randomized Number between 1 and 6>
+*/
 int rollDice(){
   int num;
   
@@ -29,6 +29,7 @@ int rollDice(){
 int movePlayerPosition(int initialPlayerPosition, int rollDice)
 {
   int newPosition;
+  // TODO Move printing outside the function.
   printf("Rolled Dice... \n");
   printf("Outcome: %d\n", rollDice);
   newPosition = initialPlayerPosition + rollDice;
@@ -36,16 +37,17 @@ int movePlayerPosition(int initialPlayerPosition, int rollDice)
 }
 
 /* Helper Functions for the Equation Generation Function*/
+// could probably extract it into one function
 
 int getRandomNumber(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
 
-int generateMathProblem(int num1, int num2){
-  int ans;
+int generateMathProblem(int min, int max){
+  int num1, num2, ans;
   char operator;
-  num1 = getRandomNumber(-10, 10);
-  num2 = getRandomNumber(-10, 10);
+  num1 = getRandomNumber(min, max);
+  num2 = getRandomNumber(min, max);
   
   
   int randInt = rand() % 4;
@@ -142,9 +144,8 @@ int main()
 	printf("	*  (type 'start' to begin) *\n");
 	printf("	*                          *\n\n\n");
 
-  // dice rolling works
   
-  // player positioning Test Works
+  // player positioning Test
   printf("Initial Player Position: %d\n", playerPosition);
   playerPosition = movePlayerPosition(playerPosition, rollDice());
   printf("New Player Position: %d\n", playerPosition);
@@ -156,6 +157,7 @@ int main()
     printf("Player position is: %d \n", playerPosition);
   } else if (questionStatus == 1)
   {
+    // Functionality to send players back TODO
     playerPosition = playerPosition - 1;
     printf("Player sent back tile\n");
     printf("New Player position is: %d \n", playerPosition);
