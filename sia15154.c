@@ -87,7 +87,7 @@ int generateMathProblem(int min, int max){
 int main()
 {
   int start;
-  int gameDifficulty, playerPosition ;
+  int gameDifficulty, playerPosition;
   int questionStatus;
 
   playerPosition = 1;
@@ -145,23 +145,30 @@ int main()
 	printf("	*                          *\n\n\n");
 
   
-  // player positioning Test
-  printf("Initial Player Position: %d\n", playerPosition);
-  playerPosition = movePlayerPosition(playerPosition, rollDice());
-  printf("New Player Position: %d\n", playerPosition);
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
-  questionStatus = generateMathProblem(-10,10);
-  if (questionStatus == 0) {
-    printf("Player Stays in same Tile\n");
-    printf("Player position is: %d \n", playerPosition);
-  } else if (questionStatus == 1)
+  // TODO 10, 10 -> min and max set by difficulty of the game. Implement that system before this.  
+  while (playerPosition != 20)
   {
-    // Functionality to send players back TODO
-    playerPosition = playerPosition - 1;
-    printf("Player sent back tile\n");
-    printf("New Player position is: %d \n", playerPosition);
+    // player positioning Test
+    printf("Initial Player Position: %d\n", playerPosition);
+    playerPosition = movePlayerPosition(playerPosition, rollDice());
+    printf("New Player Position: %d\n", playerPosition);
+    questionStatus = generateMathProblem(-10,10);
+    if (questionStatus == 0) {
+      printf("Player Stays in same Tile\n");
+      printf("Player position is: %d \n", playerPosition);
+    } else if (questionStatus == 1)
+    {
+      // Functionality to send players back TODO
+      // sends player back a random amount between 1 and 3
+      int randNum = rand() % (3 - 1 + 1) + 1;
+      playerPosition = playerPosition - randNum;
+      printf("Player sent back %d tile/s\n", randNum);
+      printf("New Player position is: %d \n", playerPosition);
+    }
   }
+  printf("game Over fr position: %d\n", playerPosition);
   
 
   
