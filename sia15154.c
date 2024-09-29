@@ -11,18 +11,86 @@ plagiarized the work of other students and/or persons.
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <stdbool.h>
+/*
+<Description of the Function>
+Precondition: <precondition / assumption>
+@param <name> <purpose>
+@return <Randomized Number between 1 and 6, to simulate the rolling of a dice>
+*/
 
-// Function Declarations
-int rollDice();
-int movePlayerPosition(int initialPlayerPosition, int rollDice);
+int rollDice(){
+  int num;
+  
+  num = rand() % (6 + 1 - 1) + 1;
+  return num;
+}
+
+int movePlayerPosition(int initialPlayerPosition, int rollDice)
+{
+  int newPosition;
+  printf("Rolled Dice... \n");
+  printf("Outcome: %d\n", rollDice);
+  newPosition = initialPlayerPosition + rollDice;
+  return newPosition;
+}
+
+/* Helper Functions for the Equation Generation Function*/
+
+int getRandomNumber(int min, int max) {
+    return rand() % (max - min + 1) + min;
+}
+
+int generateMathProblem(int num1, int num2){
+  int ans;
+  char operator;
+  num1 = getRandomNumber(-10, 10);
+  num2 = getRandomNumber(-10, 10);
+  
+  
+  int randInt = rand() % 4;
+  if (randInt == 0) {
+    operator = '+';
+    ans = num1 + num2;
+  } else if (randInt == 1) {
+    operator = '-';
+    ans = num1 - num2;
+  } else if (randInt == 2) {
+    operator = '*';
+    ans = num1 * num2;
+  } else if (randInt == 3) {
+    operator = '/';
+    ans = num1 / num2;
+  } else {
+    operator = '%';
+    ans = num1 % num2;
+  }
+
+    printf("Solve: %d %c %d = ?\n", num1, operator, num2);
+
+    int userAns;
+    printf("Your answer: ");
+    scanf("%d", &userAns);
+
+    if (userAns == ans) {
+        printf("Correct!\n");
+        return 0;
+    } else {
+        printf("Incorrect. The correct answer is %d.\n", ans);
+        return 1;
+    }
+  
+}
 
 int main()
 {
   int start;
   int gameDifficulty, playerPosition ;
+  int questionStatus;
 
   playerPosition = 1;
-
+  // seed the random number generation
+  srand(time(NULL));
 
   // start screen
   printf("\n");
@@ -45,11 +113,13 @@ int main()
   // Difficulty Selection:
   printf("Choose Your Difficulty [(1) (2) (3)]: ");
   scanf("%d", &gameDifficulty);
+
   while(gameDifficulty != 1 || gameDifficulty != 2 || gameDifficulty != 3)
   {
     if (gameDifficulty == 1 || gameDifficulty == 2 || gameDifficulty == 3)
     {
         printf("Game Difficulty (%d) Selected\n", gameDifficulty);
+        // can we even use break?
         break;
     }
     else
@@ -59,7 +129,6 @@ int main()
         scanf("%d", &gameDifficulty);
     }
   } 
-
 
   /*START THE GAME*/
 	printf("\n");
@@ -71,36 +140,28 @@ int main()
 	printf("	*  Difficulty: (%i)         *\n", gameDifficulty);
 	printf("	*                          *\n");
 	printf("	*  (type 'start' to begin) *\n");
-	printf("	*                          *\n");
+	printf("	*                          *\n\n\n");
 
   // dice rolling works
   
-  printf("Initial Player Position: %d", playerPosition);
+  // player positioning Test Works
+  printf("Initial Player Position: %d\n", playerPosition);
   playerPosition = movePlayerPosition(playerPosition, rollDice());
-  printf("New Player Position: %d", playerPosition);
+  printf("New Player Position: %d\n", playerPosition);
+
+  /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
+  questionStatus = generateMathProblem(-10,10);
+  if (questionStatus == 0) {
+    printf("Player Stays in same Tile\n");
+    printf("Player position is: %d \n", playerPosition);
+  } else if (questionStatus == 1)
+  {
+    playerPosition = playerPosition - 1;
+    printf("Player sent back tile\n");
+    printf("New Player position is: %d \n", playerPosition);
+  }
+  
 
   
-}
-
-/*
-<Description of the Function>
-Precondition: <precondition / assumption>
-@param <name> <purpose>
-@return <Randomized Number between 1 and 6, to simulate the rolling of a dice>
-*/
-
-int rollDice(){
-  int num;
-  srand(time(NULL));
-  // sets num to a number randomly between 1 and 6.
-  num = rand() % (6 + 1 - 1) + 1;
-  return num;
-}
-
-int movePlayerPosition(int initialPlayerPosition, int rollDice)
-{
-  int newPosition;
-  newPosition = initialPlayerPosition + rollDice;
-  return newPosition;
 }
 
