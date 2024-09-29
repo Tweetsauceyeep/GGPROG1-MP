@@ -21,7 +21,6 @@ Precondition: <No Preconditions/Assumptions.>
 */
 int rollDice(){
   int num;
-  
   num = rand() % (6 + 1 - 1) + 1;
   return num;
 }
@@ -75,10 +74,14 @@ int generateMathProblem(int min, int max){
     scanf("%d", &userAns);
 
     if (userAns == ans) {
+        printf("-------------------------------\n");
         printf("Correct!\n");
+        printf("-------------------------------\n");
         return 0;
     } else {
+        printf("-------------------------------\n");
         printf("Incorrect. The correct answer is %d.\n", ans);
+        printf("-------------------------------\n");
         return 1;
     }
   
@@ -86,11 +89,11 @@ int generateMathProblem(int min, int max){
 
 int main()
 {
-  int start;
   int gameDifficulty, playerPosition;
-  int questionStatus;
+  int questionStatus; // What the math equation returns: 0 = question correct, 1 question wrong
+  int numMin, numMax; // range numbers can go from for math questions
 
-  playerPosition = 1;
+  playerPosition = 1; // set initial player position
   // seed the random number generation
   srand(time(NULL));
 
@@ -121,7 +124,7 @@ int main()
     if (gameDifficulty == 1 || gameDifficulty == 2 || gameDifficulty == 3)
     {
         printf("Game Difficulty (%d) Selected\n", gameDifficulty);
-        // can we even use break?
+        // TODO can we even use break?
         break;
     }
     else
@@ -132,6 +135,21 @@ int main()
     }
   } 
 
+  if (gameDifficulty == 1){
+    numMin = -10;
+    numMax = 10;
+  } else if (gameDifficulty == 2)
+  {
+    numMin = -100;
+    numMax = 100;
+  } else if (gameDifficulty == 3)
+  {
+    numMin = -1000;
+    numMax = 1000;
+  }
+  
+  
+
   /*START THE GAME*/
 	printf("\n");
 
@@ -141,10 +159,7 @@ int main()
 	printf("	*                          *\n");
 	printf("	*  Difficulty: (%i)         *\n", gameDifficulty);
 	printf("	*                          *\n");
-	printf("	*  (type 'start' to begin) *\n");
 	printf("	*                          *\n\n\n");
-
-  
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
   // TODO 10, 10 -> min and max set by difficulty of the game. Implement that system before this.  
@@ -152,22 +167,24 @@ int main()
   {
     // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
+    // Rolls the Dice, and calculates player Position from it.
     playerPosition = movePlayerPosition(playerPosition, rollDice());
     printf("New Player Position: %d\n", playerPosition);
-    questionStatus = generateMathProblem(-10,10);
+    questionStatus = generateMathProblem(numMin,numMax);
     if (questionStatus == 0) {
-      printf("Player Stays in same Tile\n");
+      printf("***Player Stays in same Tile***\n");
       printf("Player position is: %d \n", playerPosition);
     } else if (questionStatus == 1)
     {
-      // Functionality to send players back TODO
+      // TODO Functionality to send players back 
       // sends player back a random amount between 1 and 3
       int randNum = rand() % (3 - 1 + 1) + 1;
       playerPosition = playerPosition - randNum;
-      printf("Player sent back %d tile/s\n", randNum);
+      printf("***Player sent back %d tile/s***\n", randNum);
       printf("New Player position is: %d \n", playerPosition);
     }
   }
+  // rn it works until player gets a question wrong.
   printf("game Over fr position: %d\n", playerPosition);
   
 
