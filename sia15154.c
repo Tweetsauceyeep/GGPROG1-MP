@@ -12,7 +12,6 @@ plagiarized the work of other students and/or persons.
 #include <math.h>
 #include <time.h>
 
-
 /*
 <Generates a random number between a specified range (1, 6) then returning that number to be used in main>
 Precondition: <No Preconditions/Assumptions.>
@@ -30,7 +29,7 @@ int movePlayerPosition(int initialPlayerPosition, int rollDice)
   int newPosition;
   // TODO Move printing outside the function.
   printf("Rolled Dice... \n");
-  printf("Outcome: %d\n", rollDice);
+  printf("Outcome: %d\n\n", rollDice);
   newPosition = initialPlayerPosition + rollDice;
   return newPosition;
 }
@@ -76,7 +75,7 @@ int generateMathProblem(int min, int max){
     if (userAns == ans) {
         printf("-------------------------------\n");
         printf("Correct!\n");
-        printf("-------------------------------\n");
+        printf("-------------------------------\n\n");
         return 0;
     } else {
         printf("-------------------------------\n");
@@ -135,6 +134,7 @@ int main()
     }
   } 
 
+// Sets the Game Difficulty, by setting minimum and max values for the math problems.
   if (gameDifficulty == 1){
     numMin = -10;
     numMax = 10;
@@ -147,8 +147,6 @@ int main()
     numMin = -1000;
     numMax = 1000;
   }
-  
-  
 
   /*START THE GAME*/
 	printf("\n");
@@ -162,18 +160,26 @@ int main()
 	printf("	*                          *\n\n\n");
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
-  // TODO 10, 10 -> min and max set by difficulty of the game. Implement that system before this.  
-  while (playerPosition != 20)
+  // TODO: IMPLEMENT A CHECKER THAT IMPLEMENTS THIS RULE: If the die roll is too large, the token goes off the finalsquare and back again. 
+  //(For example, if a player requiring a 4 to win rolls a 5, the token moves forward three spaces, then back two spaces.)
+
+  while (playerPosition <= 20)
   {
+    // TODO put too large die roll checker here.
+
     // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
     // Rolls the Dice, and calculates player Position from it.
     playerPosition = movePlayerPosition(playerPosition, rollDice());
     printf("New Player Position: %d\n", playerPosition);
+
+    // Generate Math Problem to Solve
     questionStatus = generateMathProblem(numMin,numMax);
+
+    // Check if question is Correct, questionStatus of 0 = Correct
     if (questionStatus == 0) {
       printf("***Player Stays in same Tile***\n");
-      printf("Player position is: %d \n", playerPosition);
+      printf("Player position is: %d \n\n", playerPosition);
     } else if (questionStatus == 1)
     {
       // TODO Functionality to send players back 
@@ -181,13 +187,17 @@ int main()
       int randNum = rand() % (3 - 1 + 1) + 1;
       playerPosition = playerPosition - randNum;
       printf("***Player sent back %d tile/s***\n", randNum);
-      printf("New Player position is: %d \n", playerPosition);
+      printf("New Player position is: %d \n\n", playerPosition);
     }
   }
+
   // rn it works until player gets a question wrong.
-  printf("game Over fr position: %d\n", playerPosition);
-  
-
-  
+  // Ending Screen
+  printf("\n");
+	printf("	****************************\n");
+	printf("	*   Thank you for Playing  *\n");
+	printf("	*                          *\n");
+	printf("	* A Walk in The Math Park! *\n");
+	printf("	*                          *\n");
+	printf("	****************************\n");
 }
-
