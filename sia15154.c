@@ -33,7 +33,8 @@ int movePlayerPosition(int initialPlayerPosition, int rollDice)
   newPosition = initialPlayerPosition + rollDice;
   // Implement Checker Funciton here maybe.
   
-  if (newPosition >= 20 )
+  // was >= 20 but i think that made it an infinite loopp.
+  if (newPosition > 20 )
   {
     // if you need 3 to win, and you roll a 5. You move 3 spaces forward, then 2 backwards.
     printf("Roll makes position Larger than 20\n");
@@ -104,6 +105,7 @@ int main()
   int gameDifficulty, playerPosition;
   int questionStatus; // What the math equation returns: 0 = question correct, 1 question wrong
   int numMin, numMax; // range numbers can go from for math questions
+  int roundNumber = 1; // shows round number.
 
   playerPosition = 1; // set initial player position
   // seed the random number generation
@@ -175,11 +177,13 @@ int main()
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
   // TODO: IMPLEMENT A CHECKER THAT IMPLEMENTS THIS RULE: If the die roll is too large, the token goes off the finalsquare and back again. 
   //(For example, if a player requiring a 4 to win rolls a 5, the token moves forward three spaces, then back two spaces.)
-
-  while (playerPosition <= 20)
+  while (playerPosition < 20)
   {
-    // TODO put too large die roll checker here.
 
+    // Round Number Display: Aesthetic Purpose only
+    printf("-----------------\n");
+    printf("Round Number: %d\n", roundNumber);
+    printf("-----------------\n\n");
     // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
     // Rolls the Dice, and calculates player Position from it.
@@ -203,6 +207,8 @@ int main()
       printf("***Player sent back %d tile/s***\n", randNum);
       printf("New Player position is: %d \n\n", playerPosition);
     }
+
+    roundNumber++;
   }
 
   // rn it works until player gets a question wrong.
