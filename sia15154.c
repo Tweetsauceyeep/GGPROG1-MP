@@ -24,16 +24,14 @@ int rollDice(){
   return num;
 }
 
+// TODO: What happens when player rolls a 6
 int movePlayerPosition(int initialPlayerPosition, int rollDice)
 {
   int newPosition;
-  // TODO Move printing outside the function.
-  printf("Rolled Dice... \n");
+  
   printf("Outcome: %d\n\n", rollDice);
   newPosition = initialPlayerPosition + rollDice;
-  // Implement Checker Funciton here maybe.
   
-  // was >= 20 but i think that made it an infinite loopp.
   if (newPosition > 20 )
   {
     // if you need 3 to win, and you roll a 5. You move 3 spaces forward, then 2 backwards.
@@ -55,6 +53,7 @@ int getRandomNumber(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
 
+// TODO catch division by 0 
 int generateMathProblem(int min, int max){
   int num1, num2, ans;
   char operator;
