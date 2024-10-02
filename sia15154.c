@@ -31,7 +31,20 @@ int movePlayerPosition(int initialPlayerPosition, int rollDice)
   printf("Rolled Dice... \n");
   printf("Outcome: %d\n\n", rollDice);
   newPosition = initialPlayerPosition + rollDice;
-  return newPosition;
+  // Implement Checker Funciton here maybe.
+  
+  if (newPosition >= 20 )
+  {
+    // if you need 3 to win, and you roll a 5. You move 3 spaces forward, then 2 backwards.
+    printf("Roll makes position Larger than 20\n");
+    int greaterPos = newPosition - 20;
+    newPosition = 20 - greaterPos;
+    return newPosition;
+  } else 
+  {
+    return newPosition;
+  }
+
 }
 
 /* Helper Functions for the Equation Generation Function*/
@@ -170,6 +183,7 @@ int main()
     // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
     // Rolls the Dice, and calculates player Position from it.
+    // sets the value to movePlayerPosition which returns a number, rather than the function setting it itself.
     playerPosition = movePlayerPosition(playerPosition, rollDice());
     printf("New Player Position: %d\n", playerPosition);
 
