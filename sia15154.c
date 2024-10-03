@@ -61,6 +61,8 @@ int generateMathProblem(int min, int max){
   num2 = getRandomNumber(min, max);
   
   
+  // Operator Generator
+  // randomized number between 1 and 4;
   int randInt = rand() % 4;
   if (randInt == 0) {
     operator = '+';
@@ -101,12 +103,12 @@ int generateMathProblem(int min, int max){
 
 int main()
 {
-  int gameDifficulty, playerPosition;
+  int gameDifficulty;
   int questionStatus; // What the math equation returns: 0 = question correct, 1 question wrong
   int numMin, numMax; // range numbers can go from for math questions
   int roundNumber = 1; // shows round number.
-
-  playerPosition = 1; // set initial player position
+  int playerPosition = 1; // set initial player position
+  int numPlayers; 
   // seed the random number generation
   srand(time(NULL));
 
@@ -123,6 +125,28 @@ int main()
   printf("PRINT RULES HERE\n");
   printf("________________________________________________________________________________________\n\n");
 
+  printf("________________________________________________________________________________________\n\n");
+  printf("This Game can have up to 4 Players. Choose the number of players: (1) (2) (3) (4) \n");
+  printf("________________________________________________________________________________________\n\n");
+
+  // TODO Ask for number of Players - Implement Functionality Later.
+  printf("Choose Number of Players [(1) (2) (3) (4)]: ");
+  scanf("%d", &numPlayers);
+  while(numPlayers != 1 || numPlayers != 2 || numPlayers != 3 || numPlayers != 4)
+  {
+    if (numPlayers == 1 || numPlayers == 2 ||  numPlayers == 3 || numPlayers == 4)
+    {
+        printf("Number of Players: (%d) Selected\n", numPlayers);
+        // TODO can we even use break?
+        break;
+    }
+    else
+    {
+        printf("Pick one of the Available Choices, Try Again.\n");
+        printf("Choose Number of Players [(1) (2) (3) (4)]: ");
+        scanf("%d", &numPlayers);
+    }
+  } 
 
   printf("________________________________________________________________________________________\n\n");
   printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
@@ -181,7 +205,7 @@ int main()
 
     // Round Number Display: Aesthetic Purpose only
     printf("-----------------\n");
-    printf("Round Number: %d\n", roundNumber);
+    printf("Round Number: %d \nScore: \nPlayer turn: \n", roundNumber);
     printf("-----------------\n\n");
     // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
