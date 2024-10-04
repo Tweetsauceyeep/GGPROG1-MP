@@ -18,26 +18,26 @@ Precondition: <No Preconditions/Assumptions.>
 @param <name> <purpose>
 @return <Randomized Number between 1 and 6>
 */
-int rollDice(){
+int diceRoll(){
   int num;
-  num = rand() % (6 + 1 - 1) + 1;
+  num = rand() % 6 + 1;
   return num;
 }
 
 // TODO: What happens when player rolls a 6
-int movePlayerPosition(int initialPlayerPosition, int rollDice)
+int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosition)
 {
   int newPosition;
   
-  printf("Outcome: %d\n\n", rollDice);
-  newPosition = initialPlayerPosition + rollDice;
+  printf("Dice Roll: %d\n\n", diceRoll);
+  newPosition = initialPlayerPosition + diceRoll;
   
-  if (newPosition > 20 )
+  if (newPosition > winningPosition )
   {
     // if you need 3 to win, and you roll a 5. You move 3 spaces forward, then 2 backwards.
     printf("Roll makes position Larger than 20\n");
-    int greaterPos = newPosition - 20;
-    newPosition = 20 - greaterPos;
+    int  overshoot = newPosition - winningPosition;
+    newPosition = winningPosition - overshoot;
     return newPosition;
   } else 
   {
@@ -109,6 +109,8 @@ int main()
   int roundNumber = 1; // shows round number.
   int playerPosition = 1; // set initial player position
   int numPlayers; 
+  int randNum; // Random Number Generated when sending a player back.
+  int winningPosition = 20; // SUPPOSED TO BE 50
   // seed the random number generation
   srand(time(NULL));
 
@@ -129,50 +131,33 @@ int main()
   printf("This Game can have up to 4 Players. Choose the number of players: (1) (2) (3) (4) \n");
   printf("________________________________________________________________________________________\n\n");
 
-  // TODO Ask for number of Players - Implement Functionality Later.
+
   printf("Choose Number of Players [(1) (2) (3) (4)]: ");
   scanf("%d", &numPlayers);
-  while(numPlayers != 1 || numPlayers != 2 || numPlayers != 3 || numPlayers != 4)
-  {
-    if (numPlayers == 1 || numPlayers == 2 ||  numPlayers == 3 || numPlayers == 4)
-    {
-        printf("Number of Players: (%d) Selected\n", numPlayers);
-        // TODO can we even use break?
-        break;
-    }
-    else
-    {
-        printf("Pick one of the Available Choices, Try Again.\n");
-        printf("Choose Number of Players [(1) (2) (3) (4)]: ");
-        scanf("%d", &numPlayers);
-    }
-  } 
+
+  while (numPlayers < 1 || numPlayers > 4) {
+    printf("Pick one of the Available Choices, Try Again.\n");
+    printf("Choose Number of Players [(1) (2) (3) (4)]: ");
+    scanf("%d", &numPlayers);
+  }
+  printf("Number of Players: (%d) Selected\n", numPlayers);
 
   printf("________________________________________________________________________________________\n\n");
   printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
   printf("________________________________________________________________________________________\n\n");
-  
+
   // Difficulty Selection:
   printf("Choose Your Difficulty [(1) (2) (3)]: ");
   scanf("%d", &gameDifficulty);
 
-  while(gameDifficulty != 1 || gameDifficulty != 2 || gameDifficulty != 3)
-  {
-    if (gameDifficulty == 1 || gameDifficulty == 2 || gameDifficulty == 3)
-    {
-        printf("Game Difficulty (%d) Selected\n", gameDifficulty);
-        // TODO can we even use break?
-        break;
-    }
-    else
-    {
-        printf("Pick one of the Available Choices, Try Again.\n");
-        printf("Choose Your Difficulty [(1) (2) (3)]: ");
-        scanf("%d", &gameDifficulty);
-    }
-  } 
+  while (gameDifficulty < 1 || gameDifficulty > 3) {
+    printf("Pick one of the Available Choices, Try Again.\n");
+    printf("Choose Your Difficulty [(1) (2) (3)]: ");
+    scanf("%d", &gameDifficulty);
+  }
+  printf("Game Difficulty (%d) Selected\n", gameDifficulty);
 
-// Sets the Game Difficulty, by setting minimum and max values for the math problems.
+  // Sets the Game Difficulty, by setting minimum and max values for the math problems.
   if (gameDifficulty == 1){
     numMin = -10;
     numMax = 10;
@@ -200,18 +185,18 @@ int main()
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
   // TODO: IMPLEMENT A CHECKER THAT IMPLEMENTS THIS RULE: If the die roll is too large, the token goes off the finalsquare and back again. 
   //(For example, if a player requiring a 4 to win rolls a 5, the token moves forward three spaces, then back two spaces.)
-  while (playerPosition < 20)
+  while (playerPosition < winningPosition)
   {
 
     // Round Number Display: Aesthetic Purpose only
     printf("-----------------\n");
-    printf("Round Number: %d \nScore: \nPlayer turn: \n", roundNumber);
+    printf("Round Number: %d \nPlayer turn: \n", roundNumber);
     printf("-----------------\n\n");
     // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
     // Rolls the Dice, and calculates player Position from it.
     // sets the value to movePlayerPosition which returns a number, rather than the function setting it itself.
-    playerPosition = movePlayerPosition(playerPosition, rollDice());
+    playerPosition = movePlayerPosition(playerPosition, diceRoll(), winningPosition);
     printf("New Player Position: %d\n", playerPosition);
 
     // Generate Math Problem to Solve
@@ -225,7 +210,7 @@ int main()
     {
       // TODO Functionality to send players back 
       // sends player back a random amount between 1 and 3
-      int randNum = rand() % (3 - 1 + 1) + 1;
+      randNum = rand() % (3 - 1 + 1) + 1;
       playerPosition = playerPosition - randNum;
       printf("***Player sent back %d tile/s***\n", randNum);
       printf("New Player position is: %d \n\n", playerPosition);
