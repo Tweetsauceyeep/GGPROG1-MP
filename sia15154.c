@@ -29,54 +29,49 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
   printf("________________________________________________________________________________________\n\n");
 
   printf("________________________________________________________________________________________\n\n");
-  printf("This Game can have up to 3 Players. Choose the number of players: (1) (2) (3) (4) \n");
+  printf("This Game can have up to 4 players. Choose the number of players: (1) (2) (3) (4) \n");
   printf("________________________________________________________________________________________\n\n");
 
 
-  printf("Choose Number of Players [(0) (2) (3) (4)]: ");
+  printf("Choose Number of Players [(1) (2) (3) (4)]: ");
   scanf("%d", numPlayers);
 
-  while (*numPlayers < 0 || *numPlayers > 4) {
+  while (*numPlayers < 1 || *numPlayers > 4) {
     printf("Pick one of the Available Choices, Try Again.\n");
     printf("Choose Number of Players [(1) (2) (3) (4)]: ");
     scanf("%d", numPlayers);
   }
   printf("Number of Players: (%d) Selected\n", *numPlayers);
 
-  /* PUT LOGIC FOR MULTIPLAYER SETUP HERE*/
-
   printf("________________________________________________________________________________________\n\n");
   printf("There are 2 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
   printf("________________________________________________________________________________________\n\n");
 
   // Difficulty Selection:
-  printf("Choose Your Difficulty [(0) (2) (3)]: ");
+  printf("Choose Your Difficulty [(1) (2) (3)]: ");
   scanf("%d", gameDifficulty);
 
-  while (*gameDifficulty < 0 || *gameDifficulty > 3) {
+  while (*gameDifficulty < 1 || *gameDifficulty > 3) {
     printf("Pick one of the Available Choices, Try Again.\n");
-    printf("Choose Your Difficulty [(0) (2) (3)]: ");
+    printf("Choose Your Difficulty [(1) (2) (3)]: ");
     scanf("%d", gameDifficulty);
   }
   printf("Game Difficulty (%d) Selected\n", *gameDifficulty);
-
   // Sets the Game Difficulty, by setting minimum and max values for the math problems.
-  if (*gameDifficulty == 0){
+  if (*gameDifficulty == 1){
     *numMin = -10;
     *numMax = 10;
-  } else if (*gameDifficulty == 1)
+  } else if (*gameDifficulty == 2)
   {
     *numMin = -100;
     *numMax = 100;
-  } else if (*gameDifficulty == 2)
+  } else if (*gameDifficulty == 3)
   {
     *numMin = -1000;
     *numMax = 1000;
   }
-
   /*START THE GAME*/
 	printf("\n");
-
 	printf("	*     Are you ready to     *\n");
 	printf("	*           start          *\n");
 	printf("	* A Walk in The Math Park? *\n");
@@ -84,7 +79,6 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
 	printf("	*  Difficulty: (%i)         *\n", *gameDifficulty);
 	printf("	*                          *\n");
 	printf("	*                          *\n\n\n");
-
 }
 
 /*
@@ -176,16 +170,44 @@ int generateMathProblem(int min, int max){
   
 }
 
+void playTurn(int *roundNumber, int *playerPosition, int winningPosition, int numMin, int numMax)
+{
+  printf("Round Number: %d \nPlayer turn: \n", *roundNumber);
+  printf("Initial Player Position: %d\n", *playerPosition);
+  *playerPosition = movePlayerPosition(*playerPosition, diceRoll(), winningPosition);
+  printf("New Player Position: %d\n", *playerPosition);
+
+  // Generate Math Problem to Solve
+  int questionStatus = generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
+
+  // Check if question is Correct, questionStatus of 0 = Correct
+  if (questionStatus == 0) {
+    printf("***Player Stays in same Tile***\n");
+    printf("Player position is: %d \n\n", *playerPosition);
+  } else if (questionStatus == 1)
+  {
+    // TODO Functionality to send players back 
+    // sends player back a random amount between 1 and 3
+    int randNum = rand() % (3 - 1 + 1) + 1;
+    *playerPosition = *playerPosition - randNum;
+    printf("***Player sent back %d tile/s***\n", randNum);
+    printf("New Player position is: %d \n\n", *playerPosition);
+  }
+
+  roundNumber++;
+}
+
 int main()
 {
   // variable definition
   int gameDifficulty;
-  int questionStatus; // What the math equation returns: 0 = question correct, 1 question wrong
   int numMin, numMax; // range numbers can go from for math questions
   int roundNumber = 1; // shows round number.
-  int playerPosition = 1; // set initial player position
-  int numPlayers; 
-  int randNum; // Random Number Generated when sending a player back.
+  int playerPosition = 0; // set initial player position
+  // Individual Player Positions;
+  int player1Pos = 0, player2Pos = 0, player3Pos = 0, player4Pos = 0;
+  int currentPlayer = 1;
+  int numPlayers;  // number of players
   int winningPosition = 20; // SUPPOSED TO BE 50
 
   // seed the random number generation
@@ -196,38 +218,9 @@ int main()
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
   // Preferably make a gameActive Variable.
-  // TODO extract this into a function called displayTurn
   while (playerPosition < winningPosition)
   {
-
-    // Round Number Display: Aesthetic Purpose only
-    printf("-----------------\n");
-    printf("Round Number: %d \nPlayer turn: \n", roundNumber);
-    printf("-----------------\n\n");
-    printf("Initial Player Position: %d\n", playerPosition);
-    // Rolls the Dice, and calculates player Position from it.
-    // sets the value to movePlayerPosition which returns a number, rather than the function setting it itself.
-    playerPosition = movePlayerPosition(playerPosition, diceRoll(), winningPosition);
-    printf("New Player Position: %d\n", playerPosition);
-
-    // Generate Math Problem to Solve
-    questionStatus = generateMathProblem(numMin,numMax);
-
-    // Check if question is Correct, questionStatus of 0 = Correct
-    if (questionStatus == 0) {
-      printf("***Player Stays in same Tile***\n");
-      printf("Player position is: %d \n\n", playerPosition);
-    } else if (questionStatus == 1)
-    {
-      // TODO Functionality to send players back 
-      // sends player back a random amount between 1 and 3
-      randNum = rand() % (3 - 1 + 1) + 1;
-      playerPosition = playerPosition - randNum;
-      printf("***Player sent back %d tile/s***\n", randNum);
-      printf("New Player position is: %d \n\n", playerPosition);
-    }
-
-    roundNumber++;
+    playTurn(&roundNumber, &playerPosition, winningPosition, numMin, numMax);
   }
 
   // rn it works until player gets a question wrong.
