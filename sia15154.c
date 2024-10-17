@@ -12,6 +12,81 @@ plagiarized the work of other students and/or persons.
 #include <math.h>
 #include <time.h>
 
+
+void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
+{
+  // start screen
+  printf("\n");
+	printf("	****************************\n");
+	printf("	*        Welcome to        *\n");
+	printf("	*                          *\n");
+	printf("	* A Walk in The Math Park! *\n");
+	printf("	*                          *\n");
+	printf("	****************************\n");
+
+  printf("________________________________________________________________________________________\n\n");
+  printf("PRINT RULES HERE\n");
+  printf("________________________________________________________________________________________\n\n");
+
+  printf("________________________________________________________________________________________\n\n");
+  printf("This Game can have up to 3 Players. Choose the number of players: (1) (2) (3) (4) \n");
+  printf("________________________________________________________________________________________\n\n");
+
+
+  printf("Choose Number of Players [(0) (2) (3) (4)]: ");
+  scanf("%d", numPlayers);
+
+  while (*numPlayers < 0 || *numPlayers > 4) {
+    printf("Pick one of the Available Choices, Try Again.\n");
+    printf("Choose Number of Players [(1) (2) (3) (4)]: ");
+    scanf("%d", numPlayers);
+  }
+  printf("Number of Players: (%d) Selected\n", *numPlayers);
+
+  /* PUT LOGIC FOR MULTIPLAYER SETUP HERE*/
+
+  printf("________________________________________________________________________________________\n\n");
+  printf("There are 2 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
+  printf("________________________________________________________________________________________\n\n");
+
+  // Difficulty Selection:
+  printf("Choose Your Difficulty [(0) (2) (3)]: ");
+  scanf("%d", gameDifficulty);
+
+  while (*gameDifficulty < 0 || *gameDifficulty > 3) {
+    printf("Pick one of the Available Choices, Try Again.\n");
+    printf("Choose Your Difficulty [(0) (2) (3)]: ");
+    scanf("%d", gameDifficulty);
+  }
+  printf("Game Difficulty (%d) Selected\n", *gameDifficulty);
+
+  // Sets the Game Difficulty, by setting minimum and max values for the math problems.
+  if (*gameDifficulty == 0){
+    *numMin = -10;
+    *numMax = 10;
+  } else if (*gameDifficulty == 1)
+  {
+    *numMin = -100;
+    *numMax = 100;
+  } else if (*gameDifficulty == 2)
+  {
+    *numMin = -1000;
+    *numMax = 1000;
+  }
+
+  /*START THE GAME*/
+	printf("\n");
+
+	printf("	*     Are you ready to     *\n");
+	printf("	*           start          *\n");
+	printf("	* A Walk in The Math Park? *\n");
+	printf("	*                          *\n");
+	printf("	*  Difficulty: (%i)         *\n", *gameDifficulty);
+	printf("	*                          *\n");
+	printf("	*                          *\n\n\n");
+
+}
+
 /*
 <Generates a random number between a specified range (1, 6) then returning that number to be used in main>
 Precondition: <No Preconditions/Assumptions.>
@@ -103,6 +178,7 @@ int generateMathProblem(int min, int max){
 
 int main()
 {
+  // variable definition
   int gameDifficulty;
   int questionStatus; // What the math equation returns: 0 = question correct, 1 question wrong
   int numMin, numMax; // range numbers can go from for math questions
@@ -111,80 +187,16 @@ int main()
   int numPlayers; 
   int randNum; // Random Number Generated when sending a player back.
   int winningPosition = 20; // SUPPOSED TO BE 50
+
   // seed the random number generation
   srand(time(NULL));
 
-  // start screen
-  printf("\n");
-	printf("	****************************\n");
-	printf("	*        Welcome to        *\n");
-	printf("	*                          *\n");
-	printf("	* A Walk in The Math Park! *\n");
-	printf("	*                          *\n");
-	printf("	****************************\n");
-
-  printf("________________________________________________________________________________________\n\n");
-  printf("PRINT RULES HERE\n");
-  printf("________________________________________________________________________________________\n\n");
-
-  printf("________________________________________________________________________________________\n\n");
-  printf("This Game can have up to 4 Players. Choose the number of players: (1) (2) (3) (4) \n");
-  printf("________________________________________________________________________________________\n\n");
-
-
-  printf("Choose Number of Players [(1) (2) (3) (4)]: ");
-  scanf("%d", &numPlayers);
-
-  while (numPlayers < 1 || numPlayers > 4) {
-    printf("Pick one of the Available Choices, Try Again.\n");
-    printf("Choose Number of Players [(1) (2) (3) (4)]: ");
-    scanf("%d", &numPlayers);
-  }
-  printf("Number of Players: (%d) Selected\n", numPlayers);
-
-  printf("________________________________________________________________________________________\n\n");
-  printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
-  printf("________________________________________________________________________________________\n\n");
-
-  // Difficulty Selection:
-  printf("Choose Your Difficulty [(1) (2) (3)]: ");
-  scanf("%d", &gameDifficulty);
-
-  while (gameDifficulty < 1 || gameDifficulty > 3) {
-    printf("Pick one of the Available Choices, Try Again.\n");
-    printf("Choose Your Difficulty [(1) (2) (3)]: ");
-    scanf("%d", &gameDifficulty);
-  }
-  printf("Game Difficulty (%d) Selected\n", gameDifficulty);
-
-  // Sets the Game Difficulty, by setting minimum and max values for the math problems.
-  if (gameDifficulty == 1){
-    numMin = -10;
-    numMax = 10;
-  } else if (gameDifficulty == 2)
-  {
-    numMin = -100;
-    numMax = 100;
-  } else if (gameDifficulty == 3)
-  {
-    numMin = -1000;
-    numMax = 1000;
-  }
-
-  /*START THE GAME*/
-	printf("\n");
-
-	printf("	*     Are you ready to     *\n");
-	printf("	*           start          *\n");
-	printf("	* A Walk in The Math Park? *\n");
-	printf("	*                          *\n");
-	printf("	*  Difficulty: (%i)         *\n", gameDifficulty);
-	printf("	*                          *\n");
-	printf("	*                          *\n\n\n");
+  // game setup func
+  setupGame(&numPlayers, &gameDifficulty, &numMin, &numMax);
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
-  // TODO: IMPLEMENT A CHECKER THAT IMPLEMENTS THIS RULE: If the die roll is too large, the token goes off the finalsquare and back again. 
-  //(For example, if a player requiring a 4 to win rolls a 5, the token moves forward three spaces, then back two spaces.)
+  // Preferably make a gameActive Variable.
+  // TODO extract this into a function called displayTurn
   while (playerPosition < winningPosition)
   {
 
@@ -192,7 +204,6 @@ int main()
     printf("-----------------\n");
     printf("Round Number: %d \nPlayer turn: \n", roundNumber);
     printf("-----------------\n\n");
-    // player positioning Test
     printf("Initial Player Position: %d\n", playerPosition);
     // Rolls the Dice, and calculates player Position from it.
     // sets the value to movePlayerPosition which returns a number, rather than the function setting it itself.
