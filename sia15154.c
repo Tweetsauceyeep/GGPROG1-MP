@@ -98,7 +98,7 @@ int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosit
 {
   int newPosition;
   
-  printf("Dice Roll: %d\n\n", diceRoll);
+  printf("Dice Roll: %d\n", diceRoll);
   newPosition = initialPlayerPosition + diceRoll;
   
   if (newPosition > winningPosition )
@@ -172,8 +172,7 @@ int generateMathProblem(int min, int max){
 
 void playTurn(int *roundNumber, int *playerPosition, int winningPosition, int numMin, int numMax)
 {
-  printf("Round Number: %d \nPlayer turn: \n", *roundNumber);
-  printf("Initial Player Position: %d\n", *playerPosition);
+  printf("Round Number: %d Initial Player Position: %d Player turn: \n", *roundNumber, *playerPosition);
   *playerPosition = movePlayerPosition(*playerPosition, diceRoll(), winningPosition);
   printf("New Player Position: %d\n", *playerPosition);
 
@@ -182,19 +181,16 @@ void playTurn(int *roundNumber, int *playerPosition, int winningPosition, int nu
 
   // Check if question is Correct, questionStatus of 0 = Correct
   if (questionStatus == 0) {
-    printf("***Player Stays in same Tile***\n");
-    printf("Player position is: %d \n\n", *playerPosition);
+    printf("***Player Stays in same Tile: New Position is: (%d)***\n\n", *playerPosition);
   } else if (questionStatus == 1)
   {
     // TODO Functionality to send players back 
     // sends player back a random amount between 1 and 3
     int randNum = rand() % (3 - 1 + 1) + 1;
     *playerPosition = *playerPosition - randNum;
-    printf("***Player sent back %d tile/s***\n", randNum);
-    printf("New Player position is: %d \n\n", *playerPosition);
+    printf("***Player sent back %d tile/s: New Position is: (%d)***\n\n", randNum, *playerPosition);
   }
 
-  roundNumber++;
 }
 
 int main()
@@ -212,7 +208,6 @@ int main()
 
   // seed the random number generation
   srand(time(NULL));
-
   // game setup func
   setupGame(&numPlayers, &gameDifficulty, &numMin, &numMax);
 
@@ -220,7 +215,9 @@ int main()
   // Preferably make a gameActive Variable.
   while (playerPosition < winningPosition)
   {
+    // have a conditional that switches between the players. then pass in the function
     playTurn(&roundNumber, &playerPosition, winningPosition, numMin, numMax);
+    roundNumber++;
   }
 
   // rn it works until player gets a question wrong.
