@@ -160,12 +160,12 @@ int generateMathProblem(int min, int max){
         printf("-------------------------------\n");
         printf("Correct!\n");
         printf("-------------------------------\n\n");
-        return 0;
+        return 1;
     } else {
         printf("-------------------------------\n");
         printf("Incorrect. The correct answer is %d.\n", ans);
         printf("-------------------------------\n");
-        return 1;
+        return 0; // 0 is false
     }
   
 }
@@ -180,9 +180,9 @@ void playTurn(int *roundNumber, int *playerPosition, int winningPosition, int nu
   int questionStatus = generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
 
   // Check if question is Correct, questionStatus of 0 = Correct
-  if (questionStatus == 0) {
+  if (questionStatus == 1) {
     printf("***Player Stays in same Tile: New Position is: (%d)***\n\n", *playerPosition);
-  } else if (questionStatus == 1)
+  } else if (questionStatus == 0) // 0 is false 1 is true
   {
     // TODO Functionality to send players back 
     // sends player back a random amount between 1 and 3
