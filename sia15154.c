@@ -132,6 +132,7 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
     }
   }
 
+  // player win checker.
   if (*playerPosition == winningPosition) *gameStatus = 1;
 
 }
@@ -143,7 +144,7 @@ int main()
   int numMin, numMax; // range numbers can go from for math questions
   int roundNumber = 1; // shows round number.
   // Individual Player Positions;
-  int player1Pos = 1, player2Pos = 1, player3Pos = 1, player4Pos = 1;
+  int player1Pos = 0, player2Pos = 0, player3Pos = 0, player4Pos = 0;
   int currentPlayer = 1;
   int numPlayers;  // number of players
   int winningPosition = 10; // SUPPOSED TO BE 50
@@ -172,6 +173,10 @@ int main()
    if (*currentPosition >= 0)
    {
     playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax);
+    currentPlayer = (currentPlayer % numPlayers) + 1;
+   } else 
+   {
+    // skips player ? if current position = -1
     currentPlayer = (currentPlayer % numPlayers) + 1;
    }
   }
