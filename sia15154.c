@@ -38,7 +38,7 @@ int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosit
   if (newPosition > winningPosition )
   {
     // if you need 3 to win, and you roll a 5. You move 3 spaces forward, then 2 backwards.
-    printf("Roll makes position Larger than 20\n");
+    printf("Roll makes position Larger than %d\n", winningPosition);
     int  overshoot = newPosition - winningPosition;
     newPosition = winningPosition - overshoot;
     return newPosition;
@@ -107,9 +107,9 @@ int generateMathProblem(int min, int max){
   
 }
 
-void playTurn(int currentPlayer, int *roundNumber, int *playerPosition, int winningPosition, int numMin, int numMax)
+void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax)
 {
-  printf("Current Player: %d Round Number: %d Initial Player Position: %d Player turn: \n", currentPlayer,*roundNumber, *playerPosition);
+  printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
   *playerPosition = movePlayerPosition(*playerPosition, diceRoll(), winningPosition);
   printf("New Player Position: %d\n", *playerPosition);
 
@@ -132,6 +132,8 @@ void playTurn(int currentPlayer, int *roundNumber, int *playerPosition, int winn
     }
   }
 
+  if (*playerPosition == winningPosition) *gameStatus = 1;
+
 }
 
 int main()
@@ -140,12 +142,13 @@ int main()
   int gameDifficulty;
   int numMin, numMax; // range numbers can go from for math questions
   int roundNumber = 1; // shows round number.
-  int playerPosition = 0; // set initial player position: Current Position
   // Individual Player Positions;
   int player1Pos = 1, player2Pos = 1, player3Pos = 1, player4Pos = 1;
   int currentPlayer = 1;
   int numPlayers;  // number of players
   int winningPosition = 10; // SUPPOSED TO BE 50
+  int gameStatus = 0;
+
 
   // seed the random number generation
   srand(time(NULL));
@@ -154,21 +157,23 @@ int main()
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
   // Preferably make a gameActive Variable.
-  while (1)
+  while (gameStatus != 1)
   {
-   int *currentPosition;
-   switch (currentPlayer)
-   {
-    case 1: currentPosition = &player1Pos; break;
-    case 2: currentPosition = &player2Pos; break;
-    case 3: currentPosition = &player3Pos; break;
-    case 4: currentPosition = &player4Pos; break;
-   } 
+    int *currentPosition;
+    switch (currentPlayer)
+    {
+      case 1: currentPosition = &player1Pos; break;
+      case 2: currentPosition = &player2Pos; break;
+      case 3: currentPosition = &player3Pos; break;
+      case 4: currentPosition = &player4Pos; break;
+    } 
 
-    // have a conditional that switches between the players. then pass in the function
-    playTurn(currentPlayer, &roundNumber, currentPosition, winningPosition, numMin, numMax);
-    roundNumber++;
+   // have a conditional that switches between the players. then pass in the function
+   if (*currentPosition >= 0)
+   {
+    playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax);
     currentPlayer = (currentPlayer % numPlayers) + 1;
+   }
   }
 
   // rn it works until player gets a question wrong.
