@@ -132,7 +132,7 @@ int generateMathProblem(int min, int max){
   
   // Operator Generator
   // randomized number between 1 and 4;
-  int randInt = rand() % 4;
+  int randInt = rand() % 5;
   if (randInt == 0) {
     operator = '+';
     ans = num1 + num2;
@@ -145,7 +145,7 @@ int generateMathProblem(int min, int max){
   } else if (randInt == 3) {
     operator = '/';
     ans = num1 / num2;
-  } else {
+  } else if (randInt == 4) {
     operator = '%';
     ans = num1 % num2;
   }
@@ -170,9 +170,9 @@ int generateMathProblem(int min, int max){
   
 }
 
-void playTurn(int *roundNumber, int *playerPosition, int winningPosition, int numMin, int numMax)
+void playTurn(int currentPlayer, int *roundNumber, int *playerPosition, int winningPosition, int numMin, int numMax)
 {
-  printf("Round Number: %d Initial Player Position: %d Player turn: \n", *roundNumber, *playerPosition);
+  printf("Current Player: %d Round Number: %d Initial Player Position: %d Player turn: \n", currentPlayer,*roundNumber, *playerPosition);
   *playerPosition = movePlayerPosition(*playerPosition, diceRoll(), winningPosition);
   printf("New Player Position: %d\n", *playerPosition);
 
@@ -181,14 +181,18 @@ void playTurn(int *roundNumber, int *playerPosition, int winningPosition, int nu
 
   // Check if question is Correct, questionStatus of 0 = Correct
   if (questionStatus == 1) {
-    printf("***Player Stays in same Tile: New Position is: (%d)***\n\n", *playerPosition);
+    printf("***Player (%d) Stays in same Tile: New Position is: (%d)***\n\n", currentPlayer, *playerPosition);
   } else if (questionStatus == 0) // 0 is false 1 is true
   {
     // TODO Functionality to send players back 
     // sends player back a random amount between 1 and 3
     int randNum = rand() % (3 - 1 + 1) + 1;
     *playerPosition = *playerPosition - randNum;
-    printf("***Player sent back %d tile/s: New Position is: (%d)***\n\n", randNum, *playerPosition);
+    printf("***Player (%d) sent back %d tile/s: New Position is: (%d)***\n\n", currentPlayer, randNum, *playerPosition);
+    if (*playerPosition < 0) {
+      *playerPosition = -1;
+      printf("Player (%d)is ejected from the Game", currentPlayer);
+    }
   }
 
 }
@@ -199,7 +203,7 @@ int main()
   int gameDifficulty;
   int numMin, numMax; // range numbers can go from for math questions
   int roundNumber = 1; // shows round number.
-  int playerPosition = 0; // set initial player position
+  int playerPosition = 0; // set initial player position: Current Position
   // Individual Player Positions;
   int player1Pos = 0, player2Pos = 0, player3Pos = 0, player4Pos = 0;
   int currentPlayer = 1;
@@ -213,11 +217,21 @@ int main()
 
   /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
   // Preferably make a gameActive Variable.
-  while (playerPosition < winningPosition)
+  while (1)
   {
+   int *currentPosition;
+   switch (currentPlayer)
+   {
+    case 1: currentPosition = &player1Pos; break;
+    case 2: currentPosition = &player2Pos; break;
+    case 3: currentPosition = &player3Pos; break;
+    case 4: currentPosition = &player4Pos; break;
+   } 
+
     // have a conditional that switches between the players. then pass in the function
-    playTurn(&roundNumber, &playerPosition, winningPosition, numMin, numMax);
+    playTurn(currentPlayer, &roundNumber, currentPosition, winningPosition, numMin, numMax);
     roundNumber++;
+    currentPlayer = (currentPlayer % numPlayers) + 1;
   }
 
   // rn it works until player gets a question wrong.
@@ -229,4 +243,5 @@ int main()
 	printf("	* A Walk in The Math Park! *\n");
 	printf("	*                          *\n");
 	printf("	****************************\n");
+  return 0;
 }
