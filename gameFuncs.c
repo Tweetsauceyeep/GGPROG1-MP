@@ -1,5 +1,16 @@
 #include <stdio.h>
 
+void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos)
+{
+    printf("\nPlayer Standings:\n");
+    printf("________________________________________________________________________________________\n\n");
+    printf("Player 1 Position: %d \n", player1Pos);
+    printf("Player 2 Position: %d \n", player2Pos);
+    printf("Player 3 Position: %d \n", player3Pos);
+    printf("Player 4 Position: %d \n", player4Pos);
+    printf("________________________________________________________________________________________\n\n");
+}
+
 void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
 {
   // start screen
@@ -31,7 +42,7 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
   printf("Number of Players: (%d) Selected\n", *numPlayers);
 
   printf("________________________________________________________________________________________\n\n");
-  printf("There are 2 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
+  printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
   printf("________________________________________________________________________________________\n\n");
 
   // Difficulty Selection:

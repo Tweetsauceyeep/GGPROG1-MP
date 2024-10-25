@@ -9,7 +9,6 @@ plagiarized the work of other students and/or persons.
 ******************************************************************************/
 #include <stdio.h> 
 #include <stdlib.h> 
-#include <math.h>
 #include <time.h>
 #include "gameFuncs.c"
 
@@ -32,7 +31,7 @@ int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosit
 {
   int newPosition;
   
-  printf("Dice Roll: %d\n", diceRoll);
+  //printf("Dice Roll: %d\n", diceRoll);
   newPosition = initialPlayerPosition + diceRoll;
   
   if (newPosition > winningPosition )
@@ -107,11 +106,13 @@ int generateMathProblem(int min, int max){
   
 }
 
-void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax)
+void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
 {
-  printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
-  *playerPosition = movePlayerPosition(*playerPosition, diceRoll(), winningPosition);
-  printf("New Player Position: %d\n", *playerPosition);
+  int dice = diceRoll();
+  //printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
+  printf("Player (%d) Rolled a %d and moved from [%d] ", currentPlayer, dice, *playerPosition);
+  *playerPosition = movePlayerPosition(*playerPosition, dice, winningPosition);
+  printf("to new position [%d] \n", *playerPosition);
 
   // Generate Math Problem to Solve
   int questionStatus = generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
@@ -128,12 +129,19 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
     printf("***Player (%d) sent back %d tile/s: New Position is: (%d)***\n\n", currentPlayer, randNum, *playerPosition);
     if (*playerPosition < 0) {
       *playerPosition = -1;
+      // subtracts from total number of players
+      *numPlayers = *numPlayers - 1;
       printf("Player (%d)is ejected from the Game", currentPlayer);
     }
   }
 
+
   // player win checker.
-  if (*playerPosition == winningPosition) *gameStatus = 1;
+  if (*playerPosition == winningPosition) 
+  {
+    *gameStatus = 1;
+    *winningPlayer = currentPlayer;
+  }
 
 }
 
@@ -148,7 +156,8 @@ int main()
   int currentPlayer = 1;
   int numPlayers;  // number of players
   int winningPosition = 10; // SUPPOSED TO BE 50
-  int gameStatus = 0;
+  int winningPlayer;
+  int gameStatus = 0; // 0 if game ongoing 1 if win
 
 
   // seed the random number generation
@@ -172,7 +181,8 @@ int main()
    // have a conditional that switches between the players. then pass in the function
    if (*currentPosition >= 0)
    {
-    playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax);
+    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos);
+    playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
     currentPlayer = (currentPlayer % numPlayers) + 1;
    } else 
    {
@@ -188,6 +198,7 @@ int main()
 	printf("	*   Thank you for Playing  *\n");
 	printf("	*                          *\n");
 	printf("	* A Walk in The Math Park! *\n");
+	printf("	*   Winner: Player %d       *\n", winningPlayer);
 	printf("	*                          *\n");
 	printf("	****************************\n");
   return 0;
