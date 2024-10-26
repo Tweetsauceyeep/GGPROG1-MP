@@ -10,9 +10,86 @@ plagiarized the work of other students and/or persons.
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>
-#include "gameFuncs.c"
+//#include "gameFuncs.c"
+
+void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos)
+{
+    printf("\nPlayer Standings:\n");
+    printf("________________________________________________________________________________________\n\n");
+    printf("Player 1 Position: %d \n", player1Pos);
+    printf("Player 2 Position: %d \n", player2Pos);
+    printf("Player 3 Position: %d \n", player3Pos);
+    printf("Player 4 Position: %d \n", player4Pos);
+    printf("________________________________________________________________________________________\n\n");
+}
+
+void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
+{
+  // start screen
+  printf("\n");
+	printf("	****************************\n");
+	printf("	*        Welcome to        *\n");
+	printf("	*                          *\n");
+	printf("	* A Walk in The Math Park! *\n");
+	printf("	*                          *\n");
+	printf("	****************************\n");
+
+  printf("________________________________________________________________________________________\n\n");
+  printf("PRINT RULES HERE\n");
+  printf("________________________________________________________________________________________\n\n");
+
+  printf("________________________________________________________________________________________\n\n");
+  printf("This Game can have up to 4 players. Choose the number of players: (1) (2) (3) (4) \n");
+  printf("________________________________________________________________________________________\n\n");
 
 
+  printf("Choose Number of Players [(1) (2) (3) (4)]: ");
+  scanf("%d", numPlayers);
+
+  while (*numPlayers < 1 || *numPlayers > 4) {
+    printf("Pick one of the Available Choices, Try Again.\n");
+    printf("Choose Number of Players [(1) (2) (3) (4)]: ");
+    scanf("%d", numPlayers);
+  }
+  printf("Number of Players: (%d) Selected\n", *numPlayers);
+
+  printf("________________________________________________________________________________________\n\n");
+  printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
+  printf("________________________________________________________________________________________\n\n");
+
+  // Difficulty Selection:
+  printf("Choose Your Difficulty [(1) (2) (3)]: ");
+  scanf("%d", gameDifficulty);
+
+  while (*gameDifficulty < 1 || *gameDifficulty > 3) {
+    printf("Pick one of the Available Choices, Try Again.\n");
+    printf("Choose Your Difficulty [(1) (2) (3)]: ");
+    scanf("%d", gameDifficulty);
+  }
+  printf("Game Difficulty (%d) Selected\n", *gameDifficulty);
+  // Sets the Game Difficulty, by setting minimum and max values for the math problems.
+  if (*gameDifficulty == 1){
+    *numMin = -10;
+    *numMax = 10;
+  } else if (*gameDifficulty == 2)
+  {
+    *numMin = -100;
+    *numMax = 100;
+  } else if (*gameDifficulty == 3)
+  {
+    *numMin = -1000;
+    *numMax = 1000;
+  }
+  /*START THE GAME*/
+	printf("\n");
+	printf("	*     Are you ready to     *\n");
+	printf("	*           start          *\n");
+	printf("	* A Walk in The Math Park? *\n");
+	printf("	*                          *\n");
+	printf("	*  Difficulty: (%i)         *\n", *gameDifficulty);
+	printf("	*                          *\n");
+	printf("	*                          *\n\n\n");
+}
 
 /*
 <Generates a random number between a specified range (1, 6) then returning that number to be used in main>
@@ -30,13 +107,9 @@ int diceRoll(){
 int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosition)
 {
   int newPosition;
-  
-  //printf("Dice Roll: %d\n", diceRoll);
   newPosition = initialPlayerPosition + diceRoll;
-  
   if (newPosition > winningPosition )
   {
-    // if you need 3 to win, and you roll a 5. You move 3 spaces forward, then 2 backwards.
     printf("Roll makes position Larger than %d\n", winningPosition);
     int  overshoot = newPosition - winningPosition;
     newPosition = winningPosition - overshoot;
@@ -48,13 +121,9 @@ int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosit
 
 }
 
-/* Helper Functions for the Equation Generation Function*/
-// could probably extract it into one function
-
 int getRandomNumber(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
-
 // TODO catch division by 0 
 int generateMathProblem(int min, int max){
   int num1, num2, ans;
@@ -134,7 +203,6 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
       printf("Player (%d)is ejected from the Game", currentPlayer);
     }
   }
-
 
   // player win checker.
   if (*playerPosition == winningPosition) 
