@@ -10,17 +10,17 @@ plagiarized the work of other students and/or persons.
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>
-//#include "gameFuncs.c"
+#include "gameFuncs.c"
 
 void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos)
 {
-    printf("\nPlayer Standings:\n");
-    printf("________________________________________________________________________________________\n\n");
-    printf("Player 1 Position: %d \n", player1Pos);
-    printf("Player 2 Position: %d \n", player2Pos);
-    printf("Player 3 Position: %d \n", player3Pos);
-    printf("Player 4 Position: %d \n", player4Pos);
-    printf("________________________________________________________________________________________\n\n");
+  printf("\nPlayer Standings:\n");
+  printf("________________________________________________________________________________________\n\n");
+  printf("Player 1 Position: %d \n", player1Pos);
+  printf("Player 2 Position: %d \n", player2Pos);
+  printf("Player 3 Position: %d \n", player3Pos);
+  printf("Player 4 Position: %d \n", player4Pos);
+  printf("________________________________________________________________________________________\n\n");
 }
 
 void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
@@ -51,6 +51,7 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
     printf("Choose Number of Players [(1) (2) (3) (4)]: ");
     scanf("%d", numPlayers);
   }
+
   printf("Number of Players: (%d) Selected\n", *numPlayers);
 
   printf("________________________________________________________________________________________\n\n");
@@ -110,7 +111,7 @@ int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosit
   newPosition = initialPlayerPosition + diceRoll;
   if (newPosition > winningPosition )
   {
-    printf("Roll makes position Larger than %d\n", winningPosition);
+    printf("(Roll makes position Larger than %d) ", winningPosition);
     int  overshoot = newPosition - winningPosition;
     newPosition = winningPosition - overshoot;
     return newPosition;
@@ -124,7 +125,7 @@ int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosit
 int getRandomNumber(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
-// TODO catch division by 0 
+
 int generateMathProblem(int min, int max){
   int num1, num2, ans;
   char operator;
@@ -156,11 +157,9 @@ int generateMathProblem(int min, int max){
   }
 
     printf("Solve: %d %c %d = ?\n", num1, operator, num2);
-
     int userAns;
     printf("Your answer: ");
     scanf("%d", &userAns);
-
     if (userAns == ans) {
         printf("-------------------------------\n");
         printf("Correct!\n");
@@ -175,6 +174,7 @@ int generateMathProblem(int min, int max){
   
 }
 
+// extract into smaller funcs because this is too big and confusing
 void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
 {
   int dice = diceRoll();
