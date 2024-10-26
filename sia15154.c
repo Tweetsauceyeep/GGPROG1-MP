@@ -175,42 +175,94 @@ int generateMathProblem(int min, int max){
 }
 
 // extract into smaller funcs because this is too big and confusing
-void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
+//void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
+//{
+//  int dice = diceRoll();
+//  //printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
+//  printf("Player (%d) Rolled a %d and moved from [%d] ", currentPlayer, dice, *playerPosition);
+//  *playerPosition = movePlayerPosition(*playerPosition, dice, winningPosition);
+//  printf("to new position [%d] \n", *playerPosition);
+//
+//  // Generate Math Problem to Solve
+//  int questionStatus = generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
+//
+//  // Check if question is Correct, questionStatus of 0 = Correct
+//  if (questionStatus == 1) {
+//    printf("***Player (%d) Stays in same Tile: New Position is: (%d)***\n\n", currentPlayer, *playerPosition);
+//  } else if (questionStatus == 0) // 0 is false 1 is true
+//  {
+//    // TODO Functionality to send players back 
+//    // sends player back a random amount between 1 and 3
+//    int randNum = rand() % (3 - 1 + 1) + 1;
+//    *playerPosition = *playerPosition - randNum;
+//    printf("***Player (%d) sent back %d tile/s: New Position is: (%d)***\n\n", currentPlayer, randNum, *playerPosition);
+//    if (*playerPosition < 0) {
+//      *playerPosition = -1;
+//      // subtracts from total number of players
+//      *numPlayers = *numPlayers - 1;
+//      printf("Player (%d)is ejected from the Game", currentPlayer);
+//    }
+//  }
+//
+//  // player win checker.
+//  if (*playerPosition == winningPosition) 
+//  {
+//    *gameStatus = 1;
+//    *winningPlayer = currentPlayer;
+//  }
+//
+//}
+
+int rollDiceAndMove(int currentPlayer, int *playerPosition, int winningPosition)
 {
   int dice = diceRoll();
   //printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
   printf("Player (%d) Rolled a %d and moved from [%d] ", currentPlayer, dice, *playerPosition);
   *playerPosition = movePlayerPosition(*playerPosition, dice, winningPosition);
   printf("to new position [%d] \n", *playerPosition);
+  return dice;
 
-  // Generate Math Problem to Solve
-  int questionStatus = generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
+}
 
-  // Check if question is Correct, questionStatus of 0 = Correct
+int generateAndCheckMathProblem(int numMin, int numMax)
+{
+  return generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
+}
+
+void stayOnSameTile(int currentPlayer, int playerPosition) 
+{
+  printf("***Player (%d) Stays in same Tile: New Position is: (%d)***\n\n", currentPlayer, playerPosition);
+}
+
+void handleIncorrectAnswer(int currentPlayer, int *playerPosition, int *numPlayers)
+{
+  int randNum = rand() % (3 - 1 + 1) + 1;
+  *playerPosition = *playerPosition - randNum;
+  printf("***Player (%d) sent back %d tile/s: New Position is: (%d)***\n\n", currentPlayer, randNum, *playerPosition);
+  if (*playerPosition < 0) {
+    *playerPosition = -1;
+    // subtracts from total number of players
+    *numPlayers = *numPlayers - 1;
+    printf("Player (%d)is ejected from the Game", currentPlayer);
+  }
+}
+
+void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
+{
+  // initially it was *playerPosition, but i got errors.
+  rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
+  int questionStatus = generateAndCheckMathProblem(numMin, numMax);
   if (questionStatus == 1) {
-    printf("***Player (%d) Stays in same Tile: New Position is: (%d)***\n\n", currentPlayer, *playerPosition);
+    stayOnSameTile(currentPlayer, *playerPosition);
   } else if (questionStatus == 0) // 0 is false 1 is true
   {
-    // TODO Functionality to send players back 
-    // sends player back a random amount between 1 and 3
-    int randNum = rand() % (3 - 1 + 1) + 1;
-    *playerPosition = *playerPosition - randNum;
-    printf("***Player (%d) sent back %d tile/s: New Position is: (%d)***\n\n", currentPlayer, randNum, *playerPosition);
-    if (*playerPosition < 0) {
-      *playerPosition = -1;
-      // subtracts from total number of players
-      *numPlayers = *numPlayers - 1;
-      printf("Player (%d)is ejected from the Game", currentPlayer);
-    }
+    handleIncorrectAnswer(currentPlayer, playerPosition, numPlayers);
   }
-
-  // player win checker.
   if (*playerPosition == winningPosition) 
   {
     *gameStatus = 1;
     *winningPlayer = currentPlayer;
   }
-
 }
 
 int main()
