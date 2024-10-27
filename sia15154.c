@@ -12,17 +12,17 @@ plagiarized the work of other students and/or persons.
 #include <time.h>
 #include "gameFuncs.c"
 
-void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos)
-{
-  printf("\nPlayer Standings:\n");
-  printf("________________________________________________________________________________________\n\n");
-  printf("Player 1 Position: %d \n", player1Pos);
-  printf("Player 2 Position: %d \n", player2Pos);
-  printf("Player 3 Position: %d \n", player3Pos);
-  printf("Player 4 Position: %d \n", player4Pos);
-  printf("________________________________________________________________________________________\n\n");
-}
 
+/*
+Description: <Function displays starting screen, as well as allows players to pick number of players and set the difficulty.>
+Precondition: <N/A>
+@param <name> <purpose> 
+  <numPlayers> <Stores Value of number of players>
+  <gameDifficulty> <Stores Value of Game Difficulty Level>
+  <numMin> <Minimum value for numbers in math problem>
+  <numMax> <Maximum value for numbers in math problem>
+@return <N/A: sets values through pointers.>
+*/
 void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
 {
   // start screen
@@ -92,17 +92,6 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
 	printf("	*                          *\n\n\n");
 }
 
-/*
-<Generates a random number between a specified range (1, 6) then returning that number to be used in main>
-Precondition: <No Preconditions/Assumptions.>
-@param <name> <purpose>
-@return <Randomized Number between 1 and 6>
-*/
-int diceRoll(){
-  int num;
-  num = rand() % 6 + 1;
-  return num;
-}
 
 // TODO: What happens when player rolls a 6
 int movePlayerPosition(int initialPlayerPosition, int diceRoll, int winningPosition)
@@ -174,44 +163,51 @@ int generateMathProblem(int min, int max){
   
 }
 
-// extract into smaller funcs because this is too big and confusing
-//void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
-//{
-//  int dice = diceRoll();
-//  //printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
-//  printf("Player (%d) Rolled a %d and moved from [%d] ", currentPlayer, dice, *playerPosition);
-//  *playerPosition = movePlayerPosition(*playerPosition, dice, winningPosition);
-//  printf("to new position [%d] \n", *playerPosition);
-//
-//  // Generate Math Problem to Solve
-//  int questionStatus = generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
-//
-//  // Check if question is Correct, questionStatus of 0 = Correct
-//  if (questionStatus == 1) {
-//    printf("***Player (%d) Stays in same Tile: New Position is: (%d)***\n\n", currentPlayer, *playerPosition);
-//  } else if (questionStatus == 0) // 0 is false 1 is true
-//  {
-//    // TODO Functionality to send players back 
-//    // sends player back a random amount between 1 and 3
-//    int randNum = rand() % (3 - 1 + 1) + 1;
-//    *playerPosition = *playerPosition - randNum;
-//    printf("***Player (%d) sent back %d tile/s: New Position is: (%d)***\n\n", currentPlayer, randNum, *playerPosition);
-//    if (*playerPosition < 0) {
-//      *playerPosition = -1;
-//      // subtracts from total number of players
-//      *numPlayers = *numPlayers - 1;
-//      printf("Player (%d)is ejected from the Game", currentPlayer);
-//    }
-//  }
-//
-//  // player win checker.
-//  if (*playerPosition == winningPosition) 
-//  {
-//    *gameStatus = 1;
-//    *winningPlayer = currentPlayer;
-//  }
-//
-//}
+/*
+Description: <Displays a scoreboard of player positions.>
+Precondition: <>
+@param <name> <purpose> 
+  <player1Pos> <Stores position of player 1>
+  <player2Pos> <Stores position of player 2>
+  <player3Pos> <Stores position of player 3>
+  <player4Pos> <Stores position of player 4>
+@return <N/A>
+*/
+void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos, int roundNumber, int currentPlayer, int numPlayers)
+{
+  printf("\nPlayer Standings:\n");
+  printf("Round Number: [%d]    Current Player: [%d]\n", roundNumber, currentPlayer);
+  printf("________________________________________________________________________________________\n\n");
+  if (numPlayers >= 1)
+  {
+  printf("Player 1 Position: %d \n", player1Pos);
+  }
+  if (numPlayers >=2)
+  {
+  printf("Player 2 Position: %d \n", player2Pos);
+  }
+  if (numPlayers >=3)
+  {
+  printf("Player 3 Position: %d \n", player3Pos);
+  }
+  if (numPlayers >=4)
+  {
+  printf("Player 4 Position: %d \n", player4Pos);
+  }
+  printf("________________________________________________________________________________________\n\n");
+}
+
+/*
+<Generates a random number between a specified range (1, 6) then returning that number to be used in main>
+Precondition: <No Preconditions/Assumptions.>
+@param <name> <purpose> <N/A>
+@return <Randomized Number between 1 and 6>
+*/
+int diceRoll(){
+  int num;
+  num = rand() % 6 + 1;
+  return num;
+}
 
 int rollDiceAndMove(int currentPlayer, int *playerPosition, int winningPosition)
 {
@@ -221,7 +217,6 @@ int rollDiceAndMove(int currentPlayer, int *playerPosition, int winningPosition)
   *playerPosition = movePlayerPosition(*playerPosition, dice, winningPosition);
   printf("to new position [%d] \n", *playerPosition);
   return dice;
-
 }
 
 int generateAndCheckMathProblem(int numMin, int numMax)
@@ -229,7 +224,7 @@ int generateAndCheckMathProblem(int numMin, int numMax)
   return generateMathProblem(numMin,numMax);// What the math equation returns: 0 = question correct, 1 question wrong
 }
 
-void stayOnSameTile(int currentPlayer, int playerPosition) 
+void handleCorrectAnswer(int currentPlayer, int playerPosition) 
 {
   printf("***Player (%d) Stays in same Tile: New Position is: (%d)***\n\n", currentPlayer, playerPosition);
 }
@@ -247,22 +242,34 @@ void handleIncorrectAnswer(int currentPlayer, int *playerPosition, int *numPlaye
   }
 }
 
+// better to separate printing from the logic. Old playTurn function was WAY too long
 void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
 {
-  // initially it was *playerPosition, but i got errors.
-  rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
-  int questionStatus = generateAndCheckMathProblem(numMin, numMax);
-  if (questionStatus == 1) {
-    stayOnSameTile(currentPlayer, *playerPosition);
-  } else if (questionStatus == 0) // 0 is false 1 is true
+  int rolledSix = 0;
+  do
   {
-    handleIncorrectAnswer(currentPlayer, playerPosition, numPlayers);
-  }
-  if (*playerPosition == winningPosition) 
-  {
-    *gameStatus = 1;
-    *winningPlayer = currentPlayer;
-  }
+    if (rolledSix) 
+    {
+      printf("Player Rolled a 6!: Extra turn for Player [%d]", currentPlayer);
+    }
+    // initially it was *playerPosition, but i got errors.
+    int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
+    int answerCorrect = generateAndCheckMathProblem(numMin, numMax);
+
+    if (answerCorrect == 1) {
+      handleCorrectAnswer(currentPlayer, *playerPosition);
+    } else if (answerCorrect == 0) // 0 is false 1 is true
+    {
+      handleIncorrectAnswer(currentPlayer, playerPosition, numPlayers);
+    }
+
+    if (*playerPosition == winningPosition) 
+    {
+      *gameStatus = 1;
+      *winningPlayer = currentPlayer;
+    }
+    rolledSix = (dice == 6);
+  } while (rolledSix && *gameStatus != 1);
 }
 
 int main()
@@ -299,16 +306,22 @@ int main()
     } 
 
    // have a conditional that switches between the players. then pass in the function
+
+  displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers);
    if (*currentPosition >= 0)
    {
-    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos);
     playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
+    // gets the modulo of current player then +1. ex. (4%4 = 0) then + 1 (player 1 turn)
     currentPlayer = (currentPlayer % numPlayers) + 1;
-   } else 
+   } else if (*currentPosition < 0 && numPlayers > 0) 
    {
     // skips player ? if current position = -1
     currentPlayer = (currentPlayer % numPlayers) + 1;
    }
+
+   if (currentPlayer == 1) {
+      roundNumber++;
+    }
   }
 
   // rn it works until player gets a question wrong.
@@ -318,7 +331,9 @@ int main()
 	printf("	*   Thank you for Playing  *\n");
 	printf("	*                          *\n");
 	printf("	* A Walk in The Math Park! *\n");
-	printf("	*   Winner: Player %d       *\n", winningPlayer);
+	printf("	*   [Winner: Player %d]     *\n", winningPlayer);
+	printf("	*   Game Finished in       *\n");
+	printf("	*   Round Number [%d]       *\n", roundNumber);
 	printf("	*                          *\n");
 	printf("	****************************\n");
   return 0;
