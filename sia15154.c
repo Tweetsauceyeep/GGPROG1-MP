@@ -250,7 +250,7 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
   {
     if (rolledSix) 
     {
-      printf("Player Rolled a 6!: Extra turn for Player [%d]", currentPlayer);
+      printf("Player Rolled a 6!: Extra turn for Player [%d]\n", currentPlayer);
     }
     // initially it was *playerPosition, but i got errors.
     int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
@@ -333,7 +333,7 @@ int main()
 	printf("	* A Walk in The Math Park! *\n");
 	printf("	*   [Winner: Player %d]     *\n", winningPlayer);
 	printf("	*   Game Finished in       *\n");
-	printf("	*   Round Number [%d]       *\n", roundNumber);
+	printf("	*   Round Number [%d]       *\n", roundNumber -1);
 	printf("	*                          *\n");
 	printf("	****************************\n");
   return 0;
