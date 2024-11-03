@@ -49,7 +49,29 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
 
     if (playerChoice != 0) {
       printf("________________________________________________________________________________________\n\n");
-      printf("Print RUles HERE!\n");
+      printf("### How to Play the Game ###\n");
+      printf("1. Players: The game can be played by 1 to 4 players.\n\n");
+      printf("2. Game Level Selection:\n");
+      printf("   - Before starting, players will decide on a game level:\n");
+      printf("     - Level 1: Range of numbers from -10 to 10.\n");
+      printf("     - Level 2: Range of numbers from -100 to 100.\n");
+      printf("     - Level 3: Range of numbers from -1000 to 1000.\n\n");
+      printf("3. Rolling the Die and Movement:\n");
+      printf("   - Players take turns rolling a single die to move their token by the number of squares indicated by the die roll.\n\n");
+      printf("5. Token Movement:\n");
+      printf("   - Tokens follow a fixed boustrophedon track on the gameboard, passing through every square once.\n");
+      printf("   - For each tile a player lands on, the program randomly generates an equation (e.g., 5 * 3, 2 - 8, 7 %% 2) that the player must solve mentally.\n\n");
+      printf("6. Correct Answers:\n");
+      printf("   - If the player answers correctly, they stay on the current tile.\n");
+      printf("   - If the answer is incorrect, the player moves back 1 to 3 tiles as a penalty (penalty is randomly generated).\n");
+      printf("     - If the penalty exceeds the player's current position, they are ejected from the game.\n\n");
+      printf("7. Rolling Again:\n");
+      printf("   - If a player rolls a 6, they move and immediately roll again. Otherwise, play passes to the next player.\n\n");
+      printf("8. Winning the Game:\n");
+      printf("   - The winner is declared under one of the following conditions:\n");
+      printf("     - The first player to bring their token to the last square of the track wins.\n");
+      printf("       - If the die roll exceeds the necessary spaces, the token moves forward the required number of spaces and then back the difference (e.g., if requiring a 3 to win but rolling a 5, the token moves forward 3 spaces, then back 2).\n");
+      printf("     - All other players are ejected from the game (i.e., their current position is a negative number).\n");
       printf("________________________________________________________________________________________\n\n");
     }
   } while(playerChoice != 0);
@@ -133,27 +155,28 @@ Precondition: <>
 void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos, int roundNumber, int currentPlayer, int numPlayers, int winningPosition, int tilesPerRow)
 {
 
-  printf("\tSCOREBOARD\t\n");
+  printf("\n\tSCOREBOARD\t\n");
   printf("\nPlayer Standings:\n");
   printf("Round Number: [%d]    Current Player: [%d]\n", roundNumber, currentPlayer);
-  printf("________________________________________________________________________________________\n\n");
-  if (numPlayers >= 1)
+  printf("___________________________________________________\n\n");
+  // the code after the && makes sure to not show the player position if theyre ejected
+  if (numPlayers >= 1 && player1Pos != -1)
   {
   printf("Player 1 Position: %d \n", player1Pos);
   }
-  if (numPlayers >=2)
+  if (numPlayers >=2 && player2Pos != -1)
   {
   printf("Player 2 Position: %d \n", player2Pos);
   }
-  if (numPlayers >=3)
+  if (numPlayers >=3 && player3Pos != -1)
   {
   printf("Player 3 Position: %d \n", player3Pos);
   }
-  if (numPlayers >=4)
+  if (numPlayers >=4 && player4Pos != -1)
   {
   printf("Player 4 Position: %d \n", player4Pos);
   }
-  printf("________________________________________________________________________________________\n");
+  printf("___________________________________________________\n\n");
 
   displayGameBoard(winningPosition, tilesPerRow, player1Pos, player2Pos, player3Pos, player4Pos, numPlayers);
   printf("\n");
@@ -316,7 +339,7 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
 int main()
 {
   // SUPPOSED TO BE 50
-  int winningPosition = 50; 
+  int winningPosition = 20; 
   int tilesPerRow = 10;
 
   // variable definition
@@ -352,17 +375,28 @@ int main()
     // have a conditional that switches between the players. then pass in the function
 
     // Displays the scoreboard before every round
-    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
+    //displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
 
     if (*currentPosition >= 0)
     {
-     playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
-     // gets the modulo of current player then +1. ex. (4%4 = 0) then + 1 (player 1 turn)
-     currentPlayer = (currentPlayer % numPlayers) + 1;
+
+      // TODO: ejection test
+      //if (roundNumber == 2) {
+      //  player2Pos = -1;
+      //}
+
+      playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
+
+      // TODO: testing new position of the scoreboard, after turn is played hehehe
+      displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
+
+      // gets the modulo of current player then +1. ex. (4%4 = 0) then + 1 (player 1 turn)
+      currentPlayer = (currentPlayer % numPlayers) + 1;
+
     } else if (*currentPosition < 0 && numPlayers > 0) 
     {
      // skips player ? if current position = -1
-     currentPlayer = (currentPlayer % numPlayers) + 1;
+      currentPlayer = (currentPlayer % numPlayers) + 1;
     }
 
      // added gameStatus != 1

@@ -55,6 +55,7 @@ void displayGameBoard(int totalTiles, int tilesPerRow, int player1Pos, int playe
     } 
     printf("\n---------------------------------------------------\n");
   }
+  printf("\n");
 }
 
 
