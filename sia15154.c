@@ -11,6 +11,7 @@ plagiarized the work of other students and/or persons.
 #include <stdlib.h> 
 #include <time.h>
 #include "board.c"
+
 //#include "gameFuncs.c"
 
 
@@ -98,11 +99,11 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
   /*START THE GAME*/
 	printf("\n\n\n");
 	printf("=======================================\n");
-	printf("	      Are you ready to      \n");
-	printf("	            start           \n");
-	printf("	  A Walk in The Math Park?  \n");
+	printf("	    Are you ready to      \n");
+	printf("	          start           \n");
+	printf("	A Walk in The Math Park?  \n");
 	printf("	                            \n");
-	printf("	   Difficulty: (%i)         \n", *gameDifficulty);
+	printf("	  Difficulty: (%i)         \n", *gameDifficulty);
 	printf("	                            \n");
 	printf("=======================================\n\n\n");
 }
@@ -129,9 +130,10 @@ Precondition: <>
   <numPlayers> <Number of players playing in the game>
 @return <N/A>
 */
-void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos, int roundNumber, int currentPlayer, int numPlayers)
+void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int player4Pos, int roundNumber, int currentPlayer, int numPlayers, int winningPosition, int tilesPerRow)
 {
-  printf("\tSCOREBOARD\t");
+
+  printf("\tSCOREBOARD\t\n");
   printf("\nPlayer Standings:\n");
   printf("Round Number: [%d]    Current Player: [%d]\n", roundNumber, currentPlayer);
   printf("________________________________________________________________________________________\n\n");
@@ -151,7 +153,10 @@ void displayScoreboard(int player1Pos, int player2Pos , int player3Pos , int pla
   {
   printf("Player 4 Position: %d \n", player4Pos);
   }
-  printf("________________________________________________________________________________________\n\n");
+  printf("________________________________________________________________________________________\n");
+
+  displayGameBoard(winningPosition, tilesPerRow, player1Pos, player2Pos, player3Pos, player4Pos, numPlayers);
+  printf("\n");
 }
 
 // TODO: What happens when player rolls a 6
@@ -212,14 +217,14 @@ int generateMathProblem(int min, int max){
     printf("Your answer: ");
     scanf("%d", &userAns);
     if (userAns == ans) {
-        printf("-------------------------------\n");
-        printf("Correct!\n");
-        printf("-------------------------------\n\n");
+        printf("_______________________________\n");
+        printf("\nCorrect!\n");
+        printf("_______________________________\n\n");
         return 1;
     } else {
-        printf("-------------------------------\n");
-        printf("Incorrect. The correct answer is %d.\n", ans);
-        printf("-------------------------------\n");
+        printf("_______________________________\n");
+        printf("\nIncorrect. The correct answer is %d.\n", ans);
+        printf("_______________________________\n");
         return 0; // 0 is false
     }
   
@@ -311,7 +316,8 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
 int main()
 {
   // SUPPOSED TO BE 50
-  int winningPosition = 20; 
+  int winningPosition = 50; 
+  int tilesPerRow = 10;
 
   // variable definition
   int gameDifficulty;
@@ -346,7 +352,7 @@ int main()
     // have a conditional that switches between the players. then pass in the function
 
     // Displays the scoreboard before every round
-    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers);
+    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
 
     if (*currentPosition >= 0)
     {
@@ -373,9 +379,9 @@ int main()
 	printf("\t   Thank you for Playing  \n");
 	printf("\t                          \n");
 	printf("\tA Walk in The Math Park! \n");
-	printf("\t  [Winner: Player %d]    \n", winningPlayer);
+	printf("\t  Winner: Player [%d]    \n", winningPlayer);
 	printf("\t  Game Finished in\n");
-	printf("\t  Round Number [%d]\n", roundNumber -1);
+	printf("\t  Round Number [%d]\n", roundNumber);
 	printf("=======================================\n");
   return 0;
 }
