@@ -359,6 +359,8 @@ int main()
 
   // game setup func
   setupGame(&numPlayers, &gameDifficulty, &numMin, &numMax);
+  
+  displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
 
   // Game Logic
   while (gameStatus != 1)
@@ -375,7 +377,7 @@ int main()
     // have a conditional that switches between the players. then pass in the function
 
     // Displays the scoreboard before every round
-    //displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
+    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
 
     if (*currentPosition >= 0)
     {
@@ -388,7 +390,7 @@ int main()
       playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
 
       // TODO: testing new position of the scoreboard, after turn is played hehehe
-      displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
+      //displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
 
       // gets the modulo of current player then +1. ex. (4%4 = 0) then + 1 (player 1 turn)
       currentPlayer = (currentPlayer % numPlayers) + 1;
@@ -403,6 +405,7 @@ int main()
     if (currentPlayer == 1 && gameStatus != 1) {
       roundNumber++;
       displayRoundSeparator(roundNumber);
+      //displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow);
     }
   }
 
