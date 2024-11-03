@@ -10,6 +10,7 @@ plagiarized the work of other students and/or persons.
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>
+#include "board.c"
 //#include "gameFuncs.c"
 
 
@@ -188,6 +189,7 @@ int generateMathProblem(int min, int max){
   
   // Operator Generator
   // randomized number between 1 and 4;
+  // TODO: Could probably use case statements.
   if (operatorInt== 0) {
     operator = '+';
     ans = num1 + num2;
@@ -224,9 +226,9 @@ int generateMathProblem(int min, int max){
 }
 
 /*
-<Generates a random number between a specified range (1, 6) then returning that number to be used in main>
+<Generates a random number between a specified range (1, 6) then returns it, simulating a dice roll>
 Precondition: <No Preconditions/Assumptions.>
-@param <name> <purpose> <N/A>
+@param <N/A>
 @return <Randomized Number between 1 and 6>
 */
 int diceRoll(){
@@ -315,8 +317,8 @@ int main()
   int gameDifficulty;
   int numMin, numMax; // range numbers can go from for math questions
   int roundNumber = 1; // shows round number.
-  // Individual Player Positions;
-  int player1Pos = 0, player2Pos = 0, player3Pos = 0, player4Pos = 0;
+  // Individual Player Positions: Starts at 1???? Before it started at 0. But its better this way i think.
+  int player1Pos = 1, player2Pos = 1, player3Pos = 1, player4Pos = 1;
   int currentPlayer = 1;
   int numPlayers;  // number of players
   int winningPlayer;
@@ -325,11 +327,11 @@ int main()
 
   // seed the random number generation
   srand(time(NULL));
+
   // game setup func
   setupGame(&numPlayers, &gameDifficulty, &numMin, &numMax);
 
-  /*This is the actual Game Flow part, utilizes if the question was right or wrong, and its return statuses.*/
-  // Preferably make a gameActive Variable.
+  // Game Logic
   while (gameStatus != 1)
   {
     int *currentPosition;
@@ -341,9 +343,11 @@ int main()
       case 4: currentPosition = &player4Pos; break;
     } 
 
-   // have a conditional that switches between the players. then pass in the function
+    // have a conditional that switches between the players. then pass in the function
 
-  displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers);
+    // Displays the scoreboard before every round
+    displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers);
+
     if (*currentPosition >= 0)
     {
      playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
