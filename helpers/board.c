@@ -40,6 +40,7 @@ void displayGameBoard(int totalTiles, int tilesPerRow, int player1Pos, int playe
       }
       printf("|");
     } else {
+      // decrements (right to left)
       for (int col = tilesPerRow - 1; col >= 0; col--) {
         currentTile = row * tilesPerRow + col + 1;
         // extract to func
@@ -66,6 +67,8 @@ void displayGameBoard(int totalTiles, int tilesPerRow, int player1Pos, int playe
 //  int totalTiles = 50;
 //  int tilesPerRow = 10;
 //  int player1Pos = 1, player2Pos = 20, player3Pos = 20, player4Pos = 40;
+//  int numPlayers = 4;
 //
-//  displayGameBoard(totalTiles, tilesPerRow, player1Pos, player2Pos, player3Pos, player4Pos);
+//  displayGameBoard(totalTiles, tilesPerRow, player1Pos, player2Pos, player3Pos, player4Pos, numPlayers);
 //}
+//

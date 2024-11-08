@@ -9,9 +9,8 @@ TODO:
 ### 11/04/24
 TODO: 
 - [ ] Finish doing the comments for each function
-- [ ] 
 
 FINALIZATION:
-- Try compiling and running the program on windows.
+- [x] Try compiling and running the program on windows. (WORKS. idk why it dont run for ash)
 - Add all bonus features. + Do the function document
 - Finalize the PRECONDITIONS for the funcs. Not sure what thats about.
