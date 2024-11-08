@@ -509,6 +509,7 @@ Precondition: <playerPosition points to a valid player position>
 */
 int rollDiceAndMove(int currentPlayer, int *playerPosition, int winningPosition)
 {
+  // Before the dice roll logic
   int dice = diceRoll();
   //printf("Current Player: %d  Initial Player Position: %d \n", currentPlayer, *playerPosition);
   printf("Player (%d) Rolled a %d and moved from [%d] ", currentPlayer, dice, *playerPosition);
@@ -600,6 +601,11 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
     {
       printf("***Player Rolled a 6!: Extra turn for Player [%d]***\n\n", currentPlayer);
     }
+
+
+    printf("\nPlayer (%d) Press Enter to roll the dice...", currentPlayer);
+    while (getchar() != '\n');
+    getchar();
     // initially it was *playerPosition, but i got errors.
     int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
     int answerCorrect = generateAndCheckMathProblem(numMin, numMax);
@@ -659,14 +665,21 @@ int main()
 
     if (*currentPosition >= 1)
     {
-      // Displays the scoreboard before every round
+
+
       displayTurnSeparator(currentPlayer);
       displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow, gameStatus);
 
       playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
 
+      //printf("\nPlayer (%d) Press Enter to Move to Next Turn...", currentPlayer);
+      //while (getchar() != '\n');
+      //getchar();
+
       // gets the modulo of current player then +1. ex. (4%4 = 0) then + 1 (player 1 turn)
       currentPlayer = (currentPlayer % numPlayers) + 1;
+
+
 
     } else if (*currentPosition < 0 && numPlayers > 0) 
     {
