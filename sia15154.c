@@ -112,6 +112,7 @@ Precondition: <N/A>
   <numMax> <Maximum value for numbers in math problem>
 @return <N/A: sets values through pointers.>
 */
+// TODO: CATCH INPUTS THAT ARE NOT INTS
 void setupGame(int *numPlayers, int *gameDifficulty, int *mathDifficulty, int *numMin, int *numMax)
 {
   int playerChoice;
@@ -613,13 +614,13 @@ Precondition: <gameStatus != 1>
 @param numMax <Maximum value for numbers in math problem>
 @param numPlayers <The number of players remaining>
 @param winningPlayer <Stores the player who won the game>
+// TODO: Finish for the playTurn function,
 @return <N/A: Sets values through pointers.>
 */
 // better to separate printing from the logic. Old playTurn function was WAY too long
-void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
+void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer, int totalTiles, int tilesPerRow, int *player1Pos, int *player2Pos, int *player3Pos, int *player4Pos)
 {
   int rolledSix = 0;
-  int dice;
 
   
   do
@@ -629,33 +630,40 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
       printf("***Player Rolled a 6!: Extra turn for Player [%d]***\n\n", currentPlayer);
     }
 
-
     printf("\nPlayer (%d) Press Enter to roll the dice...", currentPlayer);
     while (getchar() != '\n');
     getchar();
 
     // initially it was *playerPosition, but i got errors.
     //int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
+    int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
+    displayGameBoard(totalTiles, tilesPerRow, *player1Pos, *player2Pos, *player3Pos, *player4Pos, *numPlayers);
     int answerCorrect = generateAndCheckMathProblem(numMin, numMax);
 
     if (answerCorrect == 1) {
       // sleep 10 on linux
       handleCorrectAnswer(currentPlayer, *playerPosition);
-      dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
     } 
-    // TODO was an else if
     if (answerCorrect == 0) // 0 is false 1 is true
     {
       handleIncorrectAnswer(currentPlayer, playerPosition, numPlayers);
     }
+
+    displayGameBoard(totalTiles, tilesPerRow, *player1Pos, *player2Pos, *player3Pos, *player4Pos, *numPlayers);
 
     if (*playerPosition == winningPosition) 
     {
       *gameStatus = 1;
       *winningPlayer = currentPlayer;
     }
+
     rolledSix = (dice == 6);
+
   } while (rolledSix && *gameStatus != 1);
+
+    printf("\nPlayer (%d) Press Enter to End your turn...", currentPlayer);
+    while (getchar() != '\n');
+    getchar();
 }
 
 int main()
@@ -697,8 +705,10 @@ int main()
     if (*currentPosition >= 1)
     {
 
-
-      playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
+      // TODO: so messy, 
+      displayTurnSeparator(currentPlayer);
+      displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow, gameStatus);
+      playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer, winningPosition, tilesPerRow, &player1Pos, &player2Pos, &player3Pos, &player4Pos);
       //printf("\nPlayer (%d) Press Enter to Move to Next Turn...", currentPlayer);
       //while (getchar() != '\n');
       //getchar();
