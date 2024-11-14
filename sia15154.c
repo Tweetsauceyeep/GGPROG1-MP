@@ -10,6 +10,10 @@ plagiarized the work of other students and/or persons.
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>
+// SLEEP function, but to run it on windows
+//#include<windows.h>
+#include<unistd.h>
+
 //#include "board.c"
 //#include "gameFuncs.c"
 
@@ -108,7 +112,7 @@ Precondition: <N/A>
   <numMax> <Maximum value for numbers in math problem>
 @return <N/A: sets values through pointers.>
 */
-void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
+void setupGame(int *numPlayers, int *gameDifficulty, int *mathDifficulty, int *numMin, int *numMax)
 {
   int playerChoice;
   // start screen
@@ -164,7 +168,7 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
   } while(playerChoice != 0);
 
   printf("----------------------------------------------------------------------------------------\n");
-  printf("This Game can have up to 4 players. Choose the number of players: (1) (2) (3) (4) \n");
+  printf("This Game can have up to 4 players:\nChoose the number of players: (1) (2) (3) (4) \n");
   printf("----------------------------------------------------------------------------------------\n\n");
 
   printf("Choose Number of Players [(1) (2) (3) (4)]: ");
@@ -179,7 +183,7 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
   printf("\n\nNumber of Players: (%d) Selected\n\n", *numPlayers);
 
   printf("----------------------------------------------------------------------------------------\n");
-  printf("There are 3 Difficulties to Choose from, (1) Easy (2) Normal (3) Hard\n");
+  printf("There are 3 Difficulties to Choose from:\n(1) Easy (2) Normal (3) Hard\n");
   printf("----------------------------------------------------------------------------------------\n\n");
 
   // Difficulty Selection:
@@ -205,6 +209,23 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
     *numMin = -1000;
     *numMax = 1000;
   }
+
+  // math difficulty;
+  printf("----------------------------------------------------------------------------------------\n");
+    printf("Choose Your Math Problem Difficulty: \n[0] Easy (2 numbers)\n[1] Harder (3 numbers): ");
+  printf("\n----------------------------------------------------------------------------------------\n");
+  printf("\nPick Difficulty: ");
+  scanf("%d", mathDifficulty);
+
+  while (*mathDifficulty < 0 || *mathDifficulty > 1) {
+    printf("----------------------------------------------------------------------------------------\n");
+    printf("Choose Your Math Problem Difficulty: \n[0] Easy (2 numbers)\n[1] Harder (3 numbers): ");
+    printf("\n----------------------------------------------------------------------------------------\n");
+    printf("\nPick Difficulty: ");
+    scanf("%d", mathDifficulty);
+  }
+  printf("\n\nMath Difficulty (%d) Selected\n\n", *mathDifficulty);
+
   /*START THE GAME*/
 	printf("\n\n\n");
 	printf("=======================================\n");
@@ -215,6 +236,10 @@ void setupGame(int *numPlayers, int *gameDifficulty, int *numMin, int *numMax)
 	printf("	  Difficulty: (%i)         \n", *gameDifficulty);
 	printf("	                            \n");
 	printf("=======================================\n\n\n");
+
+  printf("\n\nPress Enter to Continue...\n");
+  while (getchar() != '\n');
+  getchar();
 }
 
 void displayTurnSeparator(int currentPlayer){
@@ -346,7 +371,7 @@ int generateMathProblem(int min, int max){
   
   // Operator Generator
   // randomized number between 1 and 4;
-  // TODO: Could probably use case statements.
+  // TODO: Could probably use switch statements.
   if (operatorInt== 0) {
     operator = '+';
     ans = num1 + num2;
@@ -594,9 +619,11 @@ Precondition: <gameStatus != 1>
 void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winningPosition, int numMin, int numMax, int *numPlayers, int *winningPlayer)
 {
   int rolledSix = 0;
+  int dice;
+
+  
   do
   {
-
     if (rolledSix) 
     {
       printf("***Player Rolled a 6!: Extra turn for Player [%d]***\n\n", currentPlayer);
@@ -606,12 +633,15 @@ void playTurn(int *gameStatus, int currentPlayer, int *playerPosition, int winni
     printf("\nPlayer (%d) Press Enter to roll the dice...", currentPlayer);
     while (getchar() != '\n');
     getchar();
+
     // initially it was *playerPosition, but i got errors.
-    int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
+    //int dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
     int answerCorrect = generateAndCheckMathProblem(numMin, numMax);
 
     if (answerCorrect == 1) {
+      // sleep 10 on linux
       handleCorrectAnswer(currentPlayer, *playerPosition);
+      dice = rollDiceAndMove(currentPlayer, playerPosition, winningPosition);
     } 
     // TODO was an else if
     if (answerCorrect == 0) // 0 is false 1 is true
@@ -636,6 +666,7 @@ int main()
   int tilesPerRow = 10;
 
   int gameDifficulty; // Value of Game difficulty (1-3) 
+  int mathDifficulty; // value of math difficulty problems [0] = easier [1] = harder.
   int numMin, numMax; // range of numbers for math questions
   int roundNumber = 1; // shows round number.
   int player1Pos = 1, player2Pos = 1, player3Pos = 1, player4Pos = 1; // Player Positions
@@ -649,7 +680,7 @@ int main()
   srand(time(NULL));
 
   // game setup function
-  setupGame(&numPlayers, &gameDifficulty, &numMin, &numMax);
+  setupGame(&numPlayers, &gameDifficulty, &mathDifficulty, &numMin, &numMax);
 
   // Game Logic
   while (gameStatus != 1)
@@ -667,11 +698,7 @@ int main()
     {
 
 
-      displayTurnSeparator(currentPlayer);
-      displayScoreboard(player1Pos,player2Pos,player3Pos,player4Pos,roundNumber, currentPlayer, numPlayers, winningPosition, tilesPerRow, gameStatus);
-
       playTurn(&gameStatus, currentPlayer, currentPosition, winningPosition, numMin, numMax, &numPlayers, &winningPlayer);
-
       //printf("\nPlayer (%d) Press Enter to Move to Next Turn...", currentPlayer);
       //while (getchar() != '\n');
       //getchar();
